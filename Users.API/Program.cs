@@ -27,6 +27,8 @@ namespace Users.API
             builder.Services.AddTransient<IUserRepository, UserRepository>();
             builder.Services.AddTransient<UserService>();
 
+            builder.Services.AddHttpClient();
+            
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
