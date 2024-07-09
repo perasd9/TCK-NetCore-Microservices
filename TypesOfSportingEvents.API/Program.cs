@@ -1,4 +1,12 @@
 
+using Microsoft.EntityFrameworkCore;
+using TypesOfSportingEvents.API.Application;
+using TypesOfSportingEvents.API.Core.Interfaces;
+using TypesOfSportingEvents.API.Core.Interfaces.UnitOfWork;
+using TypesOfSportingEvents.API.Infrastructure;
+using TypesOfSportingEvents.API.Infrastructure.Repositories;
+using TypesOfSportingEvents.API.Infrastructure.Repositories.UnitOfWork;
+
 namespace TypesOfSportingEvents.API
 {
     public class Program
@@ -7,16 +15,20 @@ namespace TypesOfSportingEvents.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<TypesOfSportingEventsContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddTransient<ITypeOfSportingEventRepository, TypeOfSportingEventRepository>();
+            builder.Services.AddTransient<TypeOfSportingEventService>();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
