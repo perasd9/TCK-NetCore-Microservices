@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "Places.API.Core.Protos";
+
+
+service PlaceService{
+	rpc GetAll(Empty) returns (PlaceList);
+}
+
+message Empty{}
+
+message PlaceGrpc{
+	string PlaceId = 1;
+	string PlaceName = 2;
+}
+
+message PlaceList{
+	repeated PlaceGrpc places = 1;
+}

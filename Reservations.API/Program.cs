@@ -1,4 +1,12 @@
 
+using Microsoft.EntityFrameworkCore;
+using Reservations.API.Core.Interfaces;
+using Reservations.API.Core.Interfaces.UnitOfWork;
+using Reservations.API.Infrastructure;
+using Reservations.API.Infrastructure.Repositories;
+using Reservations.API.Infrastructure.Repositories.UnitOfWork;
+using Users.API.Application;
+
 namespace Reservations.API
 {
     public class Program
@@ -7,16 +15,23 @@ namespace Reservations.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddDbContext<ReservationsContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddTransient<IReservationRepository, ReservationRepository>();
+            builder.Services.AddTransient<ReservationService>();
+
+            builder.Services.AddHttpClient();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

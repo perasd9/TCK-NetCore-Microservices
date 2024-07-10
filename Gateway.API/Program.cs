@@ -1,4 +1,6 @@
 
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+
 namespace Gateway.API
 {
     public class Program
@@ -6,6 +8,7 @@ namespace Gateway.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
 
 
             builder.Services.AddControllers();
@@ -29,8 +32,26 @@ namespace Gateway.API
             app.MapControllers();
 
             app.MapReverseProxy();
-
+            app.UseMiddleware<ProtocolLoggingMiddleware>();
             app.Run();
+        }
+    }
+    public class ProtocolLoggingMiddleware
+    {
+        private readonly RequestDelegate _next;
+        private readonly ILogger<ProtocolLoggingMiddleware> _logger;
+
+        public ProtocolLoggingMiddleware(RequestDelegate next, ILogger<ProtocolLoggingMiddleware> logger)
+        {
+            _next = next;
+            _logger = logger;
+        }
+
+        public async Task Invoke(HttpContext context)
+        {
+            _logger.LogWarning($"Protocol: {context.Request.Protocol}");
+
+            await _next(context);
         }
     }
 }
