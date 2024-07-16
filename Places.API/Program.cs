@@ -1,6 +1,8 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Places.API.Application;
 using Places.API.Core.Interfaces;
 using Places.API.Core.Interfaces.UnitOfWork;
@@ -8,6 +10,7 @@ using Places.API.Endpoints;
 using Places.API.Infrastructure;
 using Places.API.Infrastructure.Repositories;
 using Places.API.Infrastructure.Repositories.UnitOfWork;
+using System.Text;
 
 namespace Places.API
 {
@@ -41,6 +44,25 @@ namespace Places.API
             builder.Services.AddTransient<PlaceService>();
             builder.Services.AddTransient<PlaceServiceGrpc>();
 
+            builder.Services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(opt =>
+            {
+                opt.RequireHttpsMetadata = false;
+                opt.SaveToken = true;
+                opt.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JWT")["Key"] ?? ""))
+                };
+            });
+
+            builder.Services.AddAuthorization();
+
             builder.Services.AddGrpc();
             builder.Services.AddGrpcReflection();
 
@@ -55,6 +77,7 @@ namespace Places.API
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapGrpcService<PlaceServiceGrpc>();

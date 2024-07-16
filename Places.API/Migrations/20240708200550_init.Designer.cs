@@ -13,7 +13,7 @@ namespace Places.API.Migrations
 {
     [DbContext(typeof(PlacesContext))]
     [Migration("20240708200550_init")]
-    partial class init
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

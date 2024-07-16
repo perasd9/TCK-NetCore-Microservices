@@ -1,15 +1,19 @@
-
+using Identity.API.Application;
+using Identity.API.Core.Interfaces;
+using Identity.API.Core.Interfaces.UnitOfWork;
+using Identity.API.Endpoints.Mapster;
+using Identity.API.Infrastructure;
+using Identity.API.Infrastructure.Repositories;
+using Identity.API.Infrastructure.Repositories.UnitOfWork;
+using Mapster;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Net;
-using Users.API.Application;
-using Users.API.Core.Interfaces;
-using Users.API.Core.Interfaces.UnitOfWork;
-using Users.API.Infrastructure;
-using Users.API.Infrastructure.Repositories;
-using Users.API.Infrastructure.Repositories.UnitOfWork;
+using System.Text;
 
-namespace Users.API
+namespace Identity.API
 {
     public class Program
     {
@@ -39,9 +43,30 @@ namespace Users.API
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddTransient<IUserRepository, UserRepository>();
             builder.Services.AddTransient<UserService>();
+            builder.Services.AddTransient<AuthenticationService>();
+
+            builder.Services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(opt =>
+            {
+                opt.RequireHttpsMetadata = false;
+                opt.SaveToken = true;
+                opt.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JWT")["Key"] ?? ""))
+                };
+            });
+
+            builder.Services.AddMapster();
+            MapsterConfig.Configure();
 
             builder.Services.AddHttpClient();
-            
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())

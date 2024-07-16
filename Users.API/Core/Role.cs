@@ -1,4 +1,4 @@
-﻿namespace Users.API.Core
+﻿namespace Identity.API.Core
 {
     public class Role
     {

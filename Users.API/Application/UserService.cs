@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Users.API.Core;
-using Users.API.Core.Interfaces.UnitOfWork;
+﻿using Identity.API.Core;
+using Identity.API.Core.Interfaces.UnitOfWork;
+using Microsoft.EntityFrameworkCore;
 
-namespace Users.API.Application
+namespace Identity.API.Application
 {
     public class UserService
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         public UserService(IUnitOfWork unitOfWork)
         {

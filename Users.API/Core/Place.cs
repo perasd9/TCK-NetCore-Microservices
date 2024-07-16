@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Users.API.Core
+namespace Identity.API.Core
 {
     public class Place
     {

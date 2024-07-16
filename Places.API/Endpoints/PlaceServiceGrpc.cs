@@ -1,4 +1,5 @@
 ﻿using Grpc.Core;
+using Places.API.Core;
 using Places.API.Core.Protos;
 
 namespace Places.API.Endpoints
@@ -13,7 +14,31 @@ namespace Places.API.Endpoints
         }
         public async override Task<PlaceList> GetAll(Empty request, ServerCallContext context)
         {
-            var places = await _placeService.GetAll();
+            //var places = await _placeService.GetAll();
+            var places = new List<Place>
+            {
+                new Place
+                {
+                    PlaceId = new Guid(),
+                    PlaceName = "p"
+                },
+                new Place
+                {
+                    PlaceId = new Guid(),
+                    PlaceName = "p"
+                },
+                new Place
+                {
+                    PlaceId = new Guid(),
+                    PlaceName = "p"
+                },
+                new Place
+                {
+                    PlaceId = new Guid(),
+                    PlaceName = "p"
+                },
+            };
+
             List<PlaceGrpc> placesGrpc = places.Select(place => new PlaceGrpc()
             {
                 PlaceId = place.PlaceId.ToString(),

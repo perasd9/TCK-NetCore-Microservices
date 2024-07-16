@@ -13,7 +13,7 @@ namespace Reservations.API.Migrations
 {
     [DbContext(typeof(ReservationsContext))]
     [Migration("20240710163656_init")]
-    partial class init
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -13,7 +13,7 @@ namespace TypesOfSportingEvents.API.Migrations
 {
     [DbContext(typeof(TypesOfSportingEventsContext))]
     [Migration("20240709110738_init")]
-    partial class init
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

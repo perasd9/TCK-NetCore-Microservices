@@ -1,14 +1,14 @@
 ﻿using Ardalis.ApiEndpoints;
 using Grpc.Net.Client;
+using Identity.API.Application;
+using Identity.API.Core;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Users.API.Application;
-using Users.API.Core;
 using Users.API.Core.Protos;
 
-namespace Users.API.Endpoints
+namespace Identity.API.Endpoints
 {
     public class GetAll : EndpointBaseAsync
         .WithoutRequest
@@ -32,7 +32,7 @@ namespace Users.API.Endpoints
 
             HttpResponseMessage response = await http.GetAsync("https://localhost:9501/api/v1/places", cancellationToken);
             var users = await _userService.GetAll();
-            var places = JsonSerializer.Deserialize<List<Place>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true});
+            var places = JsonSerializer.Deserialize<List<Place>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
             users[0].Place = places?[0];
 
@@ -55,7 +55,7 @@ namespace Users.API.Endpoints
             var request = new Empty();
 
             var reply = await client.GetAllAsync(request);
-            
+
 
             var users = await _userService.GetAll();
             var places = reply.Places.Select(placeGrpc => new Place()

@@ -1,11 +1,14 @@
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SportingEvents.API.Application;
 using SportingEvents.API.Core.Interfaces;
 using SportingEvents.API.Core.Interfaces.UnitOfWork;
 using SportingEvents.API.Infrastructure;
 using SportingEvents.API.Infrastructure.Repositories;
 using SportingEvents.API.Infrastructure.Repositories.UnitOfWork;
+using System.Text;
 
 namespace SportingEvents.API
 {
@@ -27,6 +30,23 @@ namespace SportingEvents.API
             builder.Services.AddTransient<ISportingEventRepository, SportingEventRepository>();
             builder.Services.AddTransient<SportingEventService>();
 
+            builder.Services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(opt =>
+            {
+                opt.RequireHttpsMetadata = false;
+                opt.SaveToken = true;
+                opt.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JWT")["Key"] ?? ""))
+                };
+            });
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -37,6 +57,7 @@ namespace SportingEvents.API
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
