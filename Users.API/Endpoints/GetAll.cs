@@ -12,7 +12,7 @@ namespace Identity.API.Endpoints
 {
     public class GetAll : EndpointBaseAsync
         .WithoutRequest
-        .WithActionResult
+        .WithActionResult<IEnumerable<User>>
     {
         private UserService _userService;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -24,7 +24,7 @@ namespace Identity.API.Endpoints
         }
 
         [HttpGet("api/v1/users")]
-        public override async Task<ActionResult> HandleAsync(CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<IEnumerable<User>>> HandleAsync(CancellationToken cancellationToken = default)
         {
             HttpClient http = _httpClientFactory.CreateClient();
 

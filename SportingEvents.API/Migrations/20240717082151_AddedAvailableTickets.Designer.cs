@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SportingEvents.API.Infrastructure;
 
@@ -11,9 +12,11 @@ using SportingEvents.API.Infrastructure;
 namespace SportingEvents.API.Migrations
 {
     [DbContext(typeof(SportingEventsContext))]
-    partial class SportingEventsContextModelSnapshot : ModelSnapshot
+    [Migration("20240717082151_AddedAvailableTickets")]
+    partial class AddedAvailableTickets
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

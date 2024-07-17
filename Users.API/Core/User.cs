@@ -13,5 +13,6 @@
         public Place? Place { get; set; }
         public Guid RoleId { get; set; }
         public Role? Role { get; set; }
+        public double LoyaltyPoints { get; set; }
     }
 }

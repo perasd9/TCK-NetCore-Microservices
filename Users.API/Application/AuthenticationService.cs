@@ -43,15 +43,18 @@ namespace Identity.API.Application
 
             return null;
         }
-        private string HashPassword(string password)
+
+        //helper methods for hashing and verifying hash value
+        private static string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
         }
-        private bool CheckPasswordHash(string password, string passwordHash)
+        private static bool CheckPasswordHash(string password, string passwordHash)
         {
             return BCrypt.Net.BCrypt.Verify(password, passwordHash);
         }
 
+        //generation of token with expire time and claims
         public string GenerateToken(User user)
         {
             var signinCred = new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration.GetSection("JWT")["Key"] ?? "")), SecurityAlgorithms.HmacSha256);
