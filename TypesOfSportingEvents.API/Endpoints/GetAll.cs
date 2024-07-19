@@ -1,36 +1,30 @@
 ﻿using Ardalis.ApiEndpoints;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using TypesOfSportingEvents.API.Application;
 using TypesOfSportingEvents.API.Core;
+using TypesOfSportingEvents.API.Core.Pagination;
+using TypesOfSportingEvents.API.Endpoints.QueryParameters;
 
 namespace TypesOfSportingEvents.API.Endpoints
 {
     public class GetAll : EndpointBaseAsync
-        .WithoutRequest
-        .WithActionResult
+        .WithRequest<TypeOfSportingEventQueryParameters>
+        .WithActionResult<PaginationList<TypeOfSportingEvent>>
     {
-        private TypeOfSportingEventService _typeOfSportingEventsService;
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly TypeOfSportingEventService _typeOfSportingEventsService;
 
-        public GetAll(TypeOfSportingEventService typeOfSportingEventsService, IHttpClientFactory httpClientFactory)
+        public GetAll(TypeOfSportingEventService typeOfSportingEventsService)
         {
             _typeOfSportingEventsService = typeOfSportingEventsService;
-            _httpClientFactory = httpClientFactory;
         }
 
-        [HttpGet("api/v1/typesofsportingevents")]
-        public override async Task<ActionResult> HandleAsync(CancellationToken cancellationToken = default)
+        [HttpGet("api/v1/types-of-sporting-events")]
+        [Authorize]
+        public override async Task<ActionResult<PaginationList<TypeOfSportingEvent>>> HandleAsync([FromQuery]TypeOfSportingEventQueryParameters queryParameters, CancellationToken cancellationToken = default)
         {
-            HttpClient http = _httpClientFactory.CreateClient();
-
-            //HttpResponseMessage response = await http.GetAsync("https://localhost:9201/api/v1/types", cancellationToken);
-            var types = await _typeOfSportingEventsService.GetAll();
-            //var events = JsonSerializer.Deserialize<List<SportingEvent>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true});
-
-            //events[0].Place = places?[0];
-
+            var types = await _typeOfSportingEventsService.GetAll(queryParameters);
+            
             return Ok(types);
         }
     }

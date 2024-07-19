@@ -21,30 +21,8 @@ namespace Places.API.Endpoints
         [Authorize(Roles = "User")]
         public override async Task<ActionResult> HandleAsync(CancellationToken cancellationToken = default)
         {
-            //var places = await _placeService.GetAll();
-            var places = new List<Place>
-            {
-                new Place
-                {
-                    PlaceId = new Guid(),
-                    PlaceName = "p"
-                },
-                new Place
-                {
-                    PlaceId = new Guid(),
-                    PlaceName = "p"
-                },
-                new Place
-                {
-                    PlaceId = new Guid(),
-                    PlaceName = "p"
-                },
-                new Place
-                {
-                    PlaceId = new Guid(),
-                    PlaceName = "p"
-                },
-            };
+            var places = await _placeService.GetAll();
+
             return Ok(places);
         }
     }

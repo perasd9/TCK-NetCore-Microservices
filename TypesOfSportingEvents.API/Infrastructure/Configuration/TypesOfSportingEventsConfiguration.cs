@@ -9,6 +9,10 @@ namespace TypesOfSportingEvents.API.Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<TypeOfSportingEvent> builder)
         {
             builder.ToTable(nameof(TypeOfSportingEvent));
+            builder.HasData(
+                    new TypeOfSportingEvent { TypeOfSportingEventId = Guid.NewGuid(), TypeOfSportingEventName = "Basketball" },
+                    new TypeOfSportingEvent { TypeOfSportingEventId = Guid.NewGuid(), TypeOfSportingEventName = "Soccer" }
+                );
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TypesOfSportingEvents.API.Core;
 using TypesOfSportingEvents.API.Core.Interfaces.UnitOfWork;
+using TypesOfSportingEvents.API.Core.Pagination;
+using TypesOfSportingEvents.API.Endpoints.QueryParameters;
 
 namespace TypesOfSportingEvents.API.Application
 {
@@ -13,9 +15,16 @@ namespace TypesOfSportingEvents.API.Application
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<TypeOfSportingEvent>> GetAll()
+        public async Task<PaginationList<TypeOfSportingEvent>> GetAll(TypeOfSportingEventQueryParameters queryParameters)
         {
-            return await _unitOfWork.TypeOfSportingEventRepository.GetAll().ToListAsync();
+            var items = await _unitOfWork.TypeOfSportingEventRepository.GetAll(queryParameters).ToListAsync();
+
+
+            return new PaginationList<TypeOfSportingEvent>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize);
+        }
+        public async Task<TypeOfSportingEvent?> GetById(Guid id)
+        {
+            return await _unitOfWork.TypeOfSportingEventRepository.GetById(id);
         }
     }
 }

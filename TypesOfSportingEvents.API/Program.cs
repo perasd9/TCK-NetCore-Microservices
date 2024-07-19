@@ -60,7 +60,6 @@ namespace TypesOfSportingEvents.API
             app.UseAuthentication();
             app.UseAuthorization();
 
-
             app.MapControllers();
 
             app.Run();

@@ -1,10 +1,11 @@
-
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SportingEvents.API.Application;
 using SportingEvents.API.Core.Interfaces;
 using SportingEvents.API.Core.Interfaces.UnitOfWork;
+using SportingEvents.API.Endpoints.Mapster;
 using SportingEvents.API.Infrastructure;
 using SportingEvents.API.Infrastructure.Repositories;
 using SportingEvents.API.Infrastructure.Repositories.UnitOfWork;
@@ -46,6 +47,9 @@ namespace SportingEvents.API
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JWT")["Key"] ?? ""))
                 };
             });
+
+            builder.Services.AddMapster();
+            MapsterConfig.Configure();
 
             var app = builder.Build();
 

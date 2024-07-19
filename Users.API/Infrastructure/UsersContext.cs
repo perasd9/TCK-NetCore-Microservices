@@ -19,7 +19,13 @@ namespace Identity.API.Infrastructure
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new UsersConfiguration());
+
             modelBuilder.Entity<Role>().ToTable(nameof(Role));
+            modelBuilder.Entity<Role>().HasData(
+                    new Role { RoleId = new Guid(), RoleName = "User"},
+                    new Role { RoleId = new Guid(), RoleName = "Admin"}
+                );
+
             modelBuilder.Ignore<Place>();
         }
     }

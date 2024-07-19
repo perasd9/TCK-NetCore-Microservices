@@ -8,12 +8,12 @@ namespace Identity.API.Endpoints.Mapster
     {
         public static void Configure()
         {
-            //Login user to User
+            //LoginUser to User
             TypeAdapterConfig<LoginUserDTO, User>.NewConfig()
                 .Map(dest => dest.Email, src => src.Email)
                 .Map(dest => dest.Password, src => src.Password);
 
-            //Register user to User
+            //RegisterUser to User
             TypeAdapterConfig<RegisterUserDTO, User>.NewConfig()
                 .Map(dest => dest.UserId, src => src.UserId)
                 .Map(dest => dest.JMBG, src => src.JMBG)
