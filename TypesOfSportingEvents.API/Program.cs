@@ -6,6 +6,7 @@ using System.Text;
 using TypesOfSportingEvents.API.Application;
 using TypesOfSportingEvents.API.Core.Interfaces;
 using TypesOfSportingEvents.API.Core.Interfaces.UnitOfWork;
+using TypesOfSportingEvents.API.gRPCServices;
 using TypesOfSportingEvents.API.Infrastructure;
 using TypesOfSportingEvents.API.Infrastructure.Repositories;
 using TypesOfSportingEvents.API.Infrastructure.Repositories.UnitOfWork;
@@ -30,6 +31,8 @@ namespace TypesOfSportingEvents.API
             builder.Services.AddTransient<ITypeOfSportingEventRepository, TypeOfSportingEventRepository>();
             builder.Services.AddTransient<TypeOfSportingEventService>();
 
+            builder.Services.AddGrpc();
+
             builder.Services.AddAuthentication(opt =>
             {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -47,6 +50,8 @@ namespace TypesOfSportingEvents.API
                 };
             });
 
+            builder.Services.AddGrpcReflection();
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -60,7 +65,10 @@ namespace TypesOfSportingEvents.API
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapGrpcReflectionService();
+
             app.MapControllers();
+            app.MapGrpcService<TypeOfSportingEventGRPCService>();
 
             app.Run();
         }

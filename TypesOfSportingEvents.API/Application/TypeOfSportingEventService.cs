@@ -2,6 +2,7 @@
 using TypesOfSportingEvents.API.Core;
 using TypesOfSportingEvents.API.Core.Interfaces.UnitOfWork;
 using TypesOfSportingEvents.API.Core.Pagination;
+using TypesOfSportingEvents.API.Core.Protos;
 using TypesOfSportingEvents.API.Endpoints.QueryParameters;
 
 namespace TypesOfSportingEvents.API.Application
@@ -15,6 +16,7 @@ namespace TypesOfSportingEvents.API.Application
             _unitOfWork = unitOfWork;
         }
 
+        //REST METHOD
         public async Task<PaginationList<TypeOfSportingEvent>> GetAll(TypeOfSportingEventQueryParameters queryParameters)
         {
             var items = await _unitOfWork.TypeOfSportingEventRepository.GetAll(queryParameters).ToListAsync();
@@ -22,9 +24,26 @@ namespace TypesOfSportingEvents.API.Application
 
             return new PaginationList<TypeOfSportingEvent>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize);
         }
+
+        //GRPC METHOD
+        public async Task<PaginationList<TypeOfSportingEvent>> GetAll(QueryParameters queryParameters)
+        {
+            var items = await _unitOfWork.TypeOfSportingEventRepository.GetAll(queryParameters).ToListAsync();
+
+
+            return new PaginationList<TypeOfSportingEvent>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize);
+        }
+
+        //REST METHOD
         public async Task<TypeOfSportingEvent?> GetById(Guid id)
         {
             return await _unitOfWork.TypeOfSportingEventRepository.GetById(id);
+        }
+
+        //GRPC METHOD
+        public async Task<TypeOfSportingEvent?> GetById(UUID id)
+        {
+            return await _unitOfWork.TypeOfSportingEventRepository.GetById(new Guid(id.Id));
         }
     }
 }

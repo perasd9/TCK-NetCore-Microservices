@@ -12,6 +12,7 @@ namespace Reservations.API.Infrastructure
         }
 
         public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<ReservationComponent> ReservationComponents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

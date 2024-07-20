@@ -20,7 +20,6 @@ namespace TypesOfSportingEvents.API.Endpoints
         }
 
         [HttpGet("api/v1/types-of-sporting-events")]
-        [Authorize]
         public override async Task<ActionResult<PaginationList<TypeOfSportingEvent>>> HandleAsync([FromQuery]TypeOfSportingEventQueryParameters queryParameters, CancellationToken cancellationToken = default)
         {
             var types = await _typeOfSportingEventsService.GetAll(queryParameters);

@@ -7,6 +7,7 @@ using Places.API.Application;
 using Places.API.Core.Interfaces;
 using Places.API.Core.Interfaces.UnitOfWork;
 using Places.API.Endpoints;
+using Places.API.gRPCServices;
 using Places.API.Infrastructure;
 using Places.API.Infrastructure.Repositories;
 using Places.API.Infrastructure.Repositories.UnitOfWork;
@@ -42,7 +43,6 @@ namespace Places.API
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddTransient<IPlaceRepository, PlaceRepository>();
             builder.Services.AddTransient<PlaceService>();
-            builder.Services.AddTransient<PlaceServiceGrpc>();
 
             builder.Services.AddAuthentication(opt =>
             {
@@ -72,7 +72,6 @@ namespace Places.API
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
-                app.MapGrpcReflectionService();
             }
 
             app.UseHttpsRedirection();
@@ -80,8 +79,10 @@ namespace Places.API
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapGrpcService<PlaceServiceGrpc>();
+            app.MapGrpcReflectionService();
+
             app.MapControllers();
+            app.MapGrpcService<PlaceGRPCService>();
 
             app.UseMiddleware<ProtocolLoggingMiddleware>();
 

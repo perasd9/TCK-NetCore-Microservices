@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Places.API.Application;
 using Places.API.Core;
+using Places.API.Core.Pagination;
+using Places.API.Endpoints.QueryParameters;
 
 namespace Places.API.Endpoints
 {
     public class GetAll : EndpointBaseAsync
-        .WithoutRequest
-        .WithActionResult
+        .WithRequest<PlaceQueryParameters>
+        .WithActionResult<PaginationList<Place>>
     {
         private readonly PlaceService _placeService;
 
@@ -19,9 +21,9 @@ namespace Places.API.Endpoints
 
         [HttpGet("api/v1/places")]
         [Authorize(Roles = "User")]
-        public override async Task<ActionResult> HandleAsync(CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<PaginationList<Place>>> HandleAsync([FromQuery]PlaceQueryParameters queryParameters, CancellationToken cancellationToken = default)
         {
-            var places = await _placeService.GetAll();
+            var places = await _placeService.GetAll(queryParameters);
 
             return Ok(places);
         }

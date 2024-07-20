@@ -10,6 +10,7 @@
     <PackageReference Include="Ardalis.ApiEndpoints" Version="4.1.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.63.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.64.0" />
     <PackageReference Include="Grpc.Net.Client" Version="2.63.0" />
     <PackageReference Include="Grpc.Tools" Version="2.64.0">
       <PrivateAssets>all</PrivateAssets>
@@ -31,6 +32,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="7.0.20" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.6.3" />
+    <PackageReference Include="protobuf-net" Version="3.2.30" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.6.3" />
   </ItemGroup>

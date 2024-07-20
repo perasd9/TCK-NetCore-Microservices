@@ -1,11 +1,10 @@
 syntax = "proto3";
 
-option csharp_namespace = "Places.API.Core.Protos";
+option csharp_namespace = "TypesOfSportingEvents.API.Core.Protos";
 
-
-service gRPCPlaceService{
+service gRPCTypeOfSportingEventService{
 	rpc GetAll(QueryParameters) returns (PaginationList);
-	rpc GetById(UUID) returns (PlaceGrpc);
+	rpc GetById(UUID) returns (TypeOfSportingEventGrpc);
 }
 
 //basic example in case of request without query params
@@ -23,18 +22,18 @@ message QueryParameters{
 	string orderBy = 4;
 }
 
-message PlaceGrpc{
-	string PlaceId = 1;
-	string PlaceName = 2;
+message TypeOfSportingEventGrpc{
+	string TypeOfSportingEventId = 1;
+	string TypeOfSportingEventName = 2;
 }
 
 //basic example in case of returning pure list
-message PlaceList{
-	repeated PlaceGrpc places = 1;
+message TypeOfSportingEventList{
+	repeated TypeOfSportingEventGrpc types = 1;
 }
 
 message PaginationList{
-	bytes places = 1;
+	repeated TypeOfSportingEventGrpc types = 1;
 	int32 pageIndex = 2;
 	int32 pageSize = 3;
 	int32 totalPages = 4;

@@ -1,4 +1,4 @@
-﻿namespace TypesOfSportingEvents.API.Core.Pagination
+﻿namespace Places.API.Core.Pagination
 {
     public class PaginationList<TEntity>
     {
