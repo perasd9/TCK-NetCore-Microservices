@@ -32,13 +32,13 @@ namespace Places.API.gRPCServices
             return pagination;
         }
 
+        //helper method for serializing list
         private static byte[] SerializeListToBytes(IEnumerable<Place> places)
         {
-            using (var memoryStream = new MemoryStream())
-            {
-                ProtoBuf.Serializer.Serialize(memoryStream, places);
-                return memoryStream.ToArray();
-            }
+            using var memoryStream = new MemoryStream();
+
+            ProtoBuf.Serializer.Serialize(memoryStream, places);
+            return memoryStream.ToArray();
         }
 
         public async override Task<PlaceGrpc> GetById(UUID request, ServerCallContext context)

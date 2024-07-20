@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "SportingEvents.API.Core.Protos";
+import "google/protobuf/timestamp.proto";
+
+message UserGrpc{
+    string userId = 1;
+    string JMBG = 2;
+    string name = 3;
+    string surname = 4;
+    google.protobuf.Timestamp dateOfBirth = 5;
+    string email = 6;
+    string password = 7;
+    string placeId = 8;
+    //Place? Place { get; set; }
+    string RoleId = 9;
+    //Role? Role { get; set; }
+    double LoyaltyPoints = 10;
+}

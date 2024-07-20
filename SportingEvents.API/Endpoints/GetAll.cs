@@ -4,29 +4,27 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using SportingEvents.API.Application;
 using SportingEvents.API.Core;
+using SportingEvents.API.Endpoints.QueryParameters;
+using SportingEvents.API.Core.Pagination;
 
 namespace SportingEvents.API.Endpoints
 {
     public class GetAll : EndpointBaseAsync
-        .WithoutRequest
-        .WithActionResult
+        .WithRequest<SportingEventQueryParameters>
+        .WithActionResult<PaginationList<SportingEvent>>
     {
         private SportingEventService _sportingEventService;
-        private readonly IHttpClientFactory _httpClientFactory;
 
-        public GetAll(SportingEventService sportingEventService, IHttpClientFactory httpClientFactory)
+        public GetAll(SportingEventService sportingEventService)
         {
             _sportingEventService = sportingEventService;
-            _httpClientFactory = httpClientFactory;
         }
 
         [HttpGet("api/v1/sportingevents")]
-        public override async Task<ActionResult> HandleAsync(CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<PaginationList<SportingEvent>>> HandleAsync([FromQuery] SportingEventQueryParameters queryParameters, CancellationToken cancellationToken = default)
         {
-            HttpClient http = _httpClientFactory.CreateClient();
-
             //HttpResponseMessage response = await http.GetAsync("https://localhost:9201/api/v1/types", cancellationToken);
-            var events = await _sportingEventService.GetAll();
+            var events = await _sportingEventService.GetAll(queryParameters);
             //var types = JsonSerializer.Deserialize<List<TypeOfSportingEvent>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true});
 
             //events[0].Place = places?[0];

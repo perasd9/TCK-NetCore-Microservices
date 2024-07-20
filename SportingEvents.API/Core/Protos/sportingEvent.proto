@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+option csharp_namespace = "SportingEvents.API.Core.Protos";
+
+import "google/protobuf/timestamp.proto";
+import "Core/Protos/typeOfSportingEvent.proto";
+import "Core/Protos/user.proto";
+
+service gRPCSportingEventService{
+	rpc GetAll(QueryParameters) returns (PaginationList);
+	rpc GetById(UUID) returns (SportingEventGrpc);
+}
+
+//basic example in case of request without query params
+message Empty{}
+
+//wrapper message for string guid
+message UUID{
+	string id = 1;
+}
+
+message QueryParameters{
+	string search = 1;
+	int32 pageNumber = 2;
+	int32 pageSize = 3;
+	string orderBy = 4;
+}
+
+message SportingEventGrpc{
+	string sportingEventId = 1;
+	string sportingEventName = 2;
+	string sportingEventDescription = 3; 
+	double sportingEventTicketPrice = 4; 
+	google.protobuf.Timestamp dateOfSportingEvent = 5;
+	string typeOfSportingEventId = 6;
+	TypeOfSportingEventGrpc typeOfSportingEvent = 7;
+	string userId  = 8;
+	UserGrpc user = 9; 
+	int32 availableTickets  = 10;
+}
+
+//basic example in case of returning pure list
+message SportingEventList{
+	repeated SportingEventGrpc sportingEvents = 1;
+}
+
+message PaginationList{
+	bytes sportingEvents = 1;
+	int32 pageIndex = 2;
+	int32 pageSize = 3;
+	int32 totalPages = 4;
+	bool hasPrevious = 5;
+	bool hasNext = 6;
+}

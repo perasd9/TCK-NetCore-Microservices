@@ -30,7 +30,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
 
+  <ItemGroup>
+    <Protobuf Include="Core\Protos\typeOfSportingEvent.proto" GrpcServices="Server" />
+    <Protobuf Include="Core\Protos\user.proto" GrpcServices="Server" />
+    <Protobuf Include="Core\Protos\sportingEvent.proto" GrpcServices="Server" />
   </ItemGroup>
 
 </Project>

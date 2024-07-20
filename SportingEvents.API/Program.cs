@@ -6,6 +6,7 @@ using SportingEvents.API.Application;
 using SportingEvents.API.Core.Interfaces;
 using SportingEvents.API.Core.Interfaces.UnitOfWork;
 using SportingEvents.API.Endpoints.Mapster;
+using SportingEvents.API.gRPCServices;
 using SportingEvents.API.Infrastructure;
 using SportingEvents.API.Infrastructure.Repositories;
 using SportingEvents.API.Infrastructure.Repositories.UnitOfWork;
@@ -51,6 +52,9 @@ namespace SportingEvents.API
             builder.Services.AddMapster();
             MapsterConfig.Configure();
 
+            builder.Services.AddGrpc();
+            builder.Services.AddGrpcReflection();
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -64,8 +68,10 @@ namespace SportingEvents.API
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapGrpcReflectionService();
 
             app.MapControllers();
+            app.MapGrpcService<SportingEventGRPCService>();
 
             app.Run();
         }
