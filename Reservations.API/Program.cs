@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Reservations.API.Core.Interfaces;
 using Reservations.API.Core.Interfaces.UnitOfWork;
+using Reservations.API.gRPCServices;
 using Reservations.API.Infrastructure;
 using Reservations.API.Infrastructure.Repositories;
 using Reservations.API.Infrastructure.Repositories.UnitOfWork;
@@ -50,6 +51,9 @@ namespace Reservations.API
 
             builder.Services.AddHttpClient();
 
+            builder.Services.AddGrpc();
+            builder.Services.AddGrpcReflection();
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -63,8 +67,10 @@ namespace Reservations.API
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapGrpcReflectionService();
 
             app.MapControllers();
+            app.MapGrpcService<ReservationGRPCService>();
 
             app.Run();
         }

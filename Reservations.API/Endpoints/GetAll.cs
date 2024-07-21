@@ -6,12 +6,14 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Users.API.Application;
 using Reservations.API.Core;
+using Reservations.API.Endpoints.QueryParameters;
+using Reservations.API.Core.Pagination;
 
 namespace Reservations.API.Endpoints
 {
     public class GetAll : EndpointBaseAsync
-        .WithoutRequest
-        .WithActionResult
+        .WithRequest<ReservationQueryParameters>
+        .WithActionResult<PaginationList<Reservation>>
     {
         private ReservationService _reservationService;
         private readonly IHttpClientFactory _httpClientFactory;
@@ -23,15 +25,15 @@ namespace Reservations.API.Endpoints
         }
 
         [HttpGet("api/v1/reservations")]
-        public override async Task<ActionResult> HandleAsync(CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<PaginationList<Reservation>>> HandleAsync([FromQuery] ReservationQueryParameters queryParameters, CancellationToken cancellationToken = default)
         {
             HttpClient http = _httpClientFactory.CreateClient();
 
             http.DefaultRequestVersion = HttpVersion.Version20;
 
-            HttpResponseMessage response = await http.GetAsync("https://localhost:9401/api/v1/sportingevents", cancellationToken);
-            var reservations = await _reservationService.GetAll();
-            var events = JsonSerializer.Deserialize<List<SportingEvent>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true});
+            //HttpResponseMessage response = await http.GetAsync("https://localhost:9401/api/v1/sportingevents", cancellationToken);
+            var reservations = await _reservationService.GetAll(queryParameters);
+            //var events = JsonSerializer.Deserialize<List<SportingEvent>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true});
 
 
             return Ok(reservations);

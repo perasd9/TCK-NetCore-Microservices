@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+option csharp_namespace = "Reservations.API.Core.Protos";
+
+
+message ReservationComponentGrpc{
+	string reservationId = 1;
+	int32 SerialNumber = 2;
+	double price = 3;
+	int32 numberOfTickets = 4;
+	double sumComponentPrice = 5;
+	string sportingEventId = 6;
+	//SportingEventGrpc sportingEvent = 7;
+}

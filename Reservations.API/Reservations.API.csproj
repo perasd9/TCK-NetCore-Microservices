@@ -31,9 +31,10 @@
         </PackageReference>
   </ItemGroup>
 
-  <!--<ItemGroup>
-    <Folder Include="Core\Protos\" />
-  </ItemGroup>-->
+  <ItemGroup>
+    <Protobuf Include="Core\Protos\reservationComponent.proto" GrpcServices="Server" />
+    <Protobuf Include="Core\Protos\reservation.proto" GrpcServices="Server" />
+  </ItemGroup>
   
 
 </Project>

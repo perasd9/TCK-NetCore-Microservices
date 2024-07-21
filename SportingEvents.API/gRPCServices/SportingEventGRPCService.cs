@@ -33,11 +33,11 @@ namespace SportingEvents.API.gRPCServices
         }
 
         //helper method for serializing list
-        private static byte[] SerializeListToBytes(IEnumerable<SportingEvent> places)
+        private static byte[] SerializeListToBytes(IEnumerable<SportingEvent> events)
         {
             using var memoryStream = new MemoryStream();
 
-            ProtoBuf.Serializer.Serialize(memoryStream, places);
+            ProtoBuf.Serializer.Serialize(memoryStream, events);
             return memoryStream.ToArray();
         }
     }

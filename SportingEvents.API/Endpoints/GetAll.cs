@@ -13,7 +13,7 @@ namespace SportingEvents.API.Endpoints
         .WithRequest<SportingEventQueryParameters>
         .WithActionResult<PaginationList<SportingEvent>>
     {
-        private SportingEventService _sportingEventService;
+        private readonly SportingEventService _sportingEventService;
 
         public GetAll(SportingEventService sportingEventService)
         {

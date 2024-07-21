@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+option csharp_namespace = "Reservations.API.Core.Protos";
+
+import "google/protobuf/timestamp.proto";
+import "Core/Protos/reservationComponent.proto";
+
+service gRPCReservationService{
+	rpc GetAll(QueryParameters) returns (PaginationList);
+	rpc GetById(UUID) returns (ReservationGrpc);
+}
+
+//basic example in case of request without query params
+message Empty{}
+
+//wrapper message for string guid
+message UUID{
+	string id = 1;
+}
+
+message QueryParameters{
+	string search = 1;
+	int32 pageNumber = 2;
+	int32 pageSize = 3;
+	string orderBy = 4;
+}
+
+
+message ReservationGrpc{
+	string reservationId = 1;
+	double sumPrice = 2;
+	google.protobuf.Timestamp dateOfReservation = 3;
+	string userId = 4;
+	repeated ReservationComponentGrpc  reservationComponents = 5;
+
+}
+
+
+//basic example in case of returning pure list
+message ReservationList{
+	repeated ReservationGrpc reservations = 1;
+}
+
+message PaginationList{
+	bytes reservations = 1;
+	int32 pageIndex = 2;
+	int32 pageSize = 3;
+	int32 totalPages = 4;
+	bool hasPrevious = 5;
+	bool hasNext = 6;
+}

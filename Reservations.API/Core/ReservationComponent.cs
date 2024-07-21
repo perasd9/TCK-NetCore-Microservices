@@ -9,6 +9,6 @@
         public int NumberOfTickets { get; set; }
         public double SumComponentPrice { get; set; }
         public Guid SportingEventId { get; set; }
-        public SportingEvent SportingEvent { get; set; }
+        public SportingEvent? SportingEvent { get; set; }
     }
 }

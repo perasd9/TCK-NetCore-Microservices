@@ -12,13 +12,13 @@ namespace Reservations.API.Infrastructure
         }
 
         public DbSet<Reservation> Reservations { get; set; }
-        public DbSet<ReservationComponent> ReservationComponents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new ReservationsConfiguration());
+
             modelBuilder.Ignore<SportingEvent>();
             modelBuilder.Ignore<User>();
         }
