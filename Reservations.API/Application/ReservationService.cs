@@ -31,5 +31,12 @@ namespace Users.API.Application
 
             return new PaginationList<Reservation>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize);
         }
+
+        public async Task Add(Reservation reservation)
+        {
+            await _unitOfWork.ReservationRepository.Save(reservation);
+            await _unitOfWork.SaveChanges();
+
+        }
     }
 }

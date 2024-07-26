@@ -40,5 +40,19 @@ namespace Identity.API.Infrastructure.Repositories
         {
             await _context.Users.AddAsync(user);
         }
+
+        public async Task IncreaseLoyaltyPoints(Guid id, double loyaltyPoints)
+        {
+            var user = await _context.Users.FindAsync(id);
+
+            if(user != null) user.LoyaltyPoints += loyaltyPoints;
+        }
+
+        public async Task DecreaseLoyaltyPoints(Guid id, double loyaltyPoints)
+        {
+            var user = await _context.Users.FindAsync(id);
+
+            if (user != null) user.LoyaltyPoints -= loyaltyPoints;
+        }
     }
 }

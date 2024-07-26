@@ -28,5 +28,18 @@ namespace SportingEvents.API.Infrastructure.Repositories
                     .Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize).Take(queryParameters.PageSize);
 
 
+        public async Task DecreaseAvailableTickets(Guid id, int availableTickets)
+        {
+            var @event = await _context.SportingEvents.FindAsync(id);
+
+            if (@event != null) @event.AvailableTickets -= availableTickets;
+        }
+
+        public async Task IncreaseAvailableTickets(Guid id, int availableTickets)
+        {
+            var @event = await _context.SportingEvents.FindAsync(id);
+
+            if (@event != null) @event.AvailableTickets += availableTickets;
+        }
     }
 }

@@ -19,8 +19,10 @@ namespace Reservations.API.Infrastructure.Repositories.Base
         public IQueryable<TEntity> GetBySearch(Expression<Func<TEntity, bool>> expression) => _context.Set<TEntity>()
             .AsNoTracking().Where(expression);
 
-        public void Save(TEntity entity) => _context.Add(entity);
+        //saga operation commit
+        public async Task Save(TEntity entity) => await _context.AddAsync(entity);
         public void Update(TEntity entity) => _context.Update(entity);
+        //saga operation rollback
         public void Delete(TEntity entity) => _context.Remove(entity);
     }
 }

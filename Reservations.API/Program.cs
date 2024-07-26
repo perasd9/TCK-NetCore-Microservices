@@ -1,9 +1,11 @@
 
+using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Reservations.API.Core.Interfaces;
 using Reservations.API.Core.Interfaces.UnitOfWork;
+using Reservations.API.Endpoints.Mapster;
 using Reservations.API.gRPCServices;
 using Reservations.API.Infrastructure;
 using Reservations.API.Infrastructure.Repositories;
@@ -48,6 +50,9 @@ namespace Reservations.API
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JWT")["Key"] ?? ""))
                 };
             });
+
+            builder.Services.AddMapster();
+            MapsterConfig.Configure();
 
             builder.Services.AddHttpClient();
 
