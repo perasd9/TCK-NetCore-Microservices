@@ -16,16 +16,16 @@ namespace Places.API.Infrastructure.Repositories
         }
 
         //REST METHOD
-        public IQueryable<Place> GetAll(PlaceQueryParameters queryParameters) => _context.Places.AsNoTracking()
+        public async Task<List<Place>> GetAll(PlaceQueryParameters queryParameters) => await _context.Places.AsNoTracking()
             .Where(type => type.PlaceName.Contains(queryParameters.Search!.Trim().ToLower()))
                 .OrderBy(type => type.PlaceName)
-                    .Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize).Take(queryParameters.PageSize);
+                    .Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize).Take(queryParameters.PageSize).ToListAsync();
 
         //GRPC METHOD
-        public IQueryable<Place> GetAll(QueryParameters queryParameters) => _context.Places.AsNoTracking()
+        public async Task<List<Place>> GetAll(QueryParameters queryParameters) => await _context.Places.AsNoTracking()
             .Where(type => type.PlaceName.Contains(queryParameters.Search!.Trim().ToLower()))
                 .OrderBy(type => type.PlaceName)
-                    .Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize).Take(queryParameters.PageSize);
+                    .Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize).Take(queryParameters.PageSize).ToListAsync();
 
         public async Task<Place?> GetById(Guid id) => await _context.Places.FindAsync(id);
     }

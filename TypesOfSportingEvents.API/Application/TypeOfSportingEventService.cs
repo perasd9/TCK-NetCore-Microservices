@@ -9,7 +9,7 @@ namespace TypesOfSportingEvents.API.Application
 {
     public class TypeOfSportingEventService
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         public TypeOfSportingEventService(IUnitOfWork unitOfWork)
         {
@@ -19,7 +19,7 @@ namespace TypesOfSportingEvents.API.Application
         //REST METHOD
         public async Task<PaginationList<TypeOfSportingEvent>> GetAll(TypeOfSportingEventQueryParameters queryParameters)
         {
-            var items = await _unitOfWork.TypeOfSportingEventRepository.GetAll(queryParameters).ToListAsync();
+            var items = await _unitOfWork.TypeOfSportingEventRepository.GetAll(queryParameters);
 
 
             return new PaginationList<TypeOfSportingEvent>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize);
@@ -28,7 +28,7 @@ namespace TypesOfSportingEvents.API.Application
         //GRPC METHOD
         public async Task<PaginationList<TypeOfSportingEvent>> GetAll(QueryParameters queryParameters)
         {
-            var items = await _unitOfWork.TypeOfSportingEventRepository.GetAll(queryParameters).ToListAsync();
+            var items = await _unitOfWork.TypeOfSportingEventRepository.GetAll(queryParameters);
 
 
             return new PaginationList<TypeOfSportingEvent>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize);

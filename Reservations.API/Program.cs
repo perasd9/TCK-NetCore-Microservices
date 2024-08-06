@@ -1,4 +1,3 @@
-
 using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +9,7 @@ using Reservations.API.gRPCServices;
 using Reservations.API.Infrastructure;
 using Reservations.API.Infrastructure.Repositories;
 using Reservations.API.Infrastructure.Repositories.UnitOfWork;
+using Reservations.API.Interceptors;
 using System.Text;
 using Users.API.Application;
 
@@ -56,7 +56,10 @@ namespace Reservations.API
 
             builder.Services.AddHttpClient();
 
-            builder.Services.AddGrpc();
+            builder.Services.AddGrpc(opt =>
+            {
+                opt.Interceptors.Add<ExceptionInterceptor>();
+            });
             builder.Services.AddGrpcReflection();
 
             var app = builder.Build();

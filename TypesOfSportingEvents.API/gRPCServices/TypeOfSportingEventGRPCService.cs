@@ -6,7 +6,7 @@ namespace TypesOfSportingEvents.API.gRPCServices
 {
     public class TypeOfSportingEventGRPCService : gRPCTypeOfSportingEventService.gRPCTypeOfSportingEventServiceBase
     {
-        private TypeOfSportingEventService _typeOfSportingEventService;
+        private readonly TypeOfSportingEventService _typeOfSportingEventService;
 
         public TypeOfSportingEventGRPCService(TypeOfSportingEventService typeOfSportingEventService)
         {
@@ -38,7 +38,7 @@ namespace TypesOfSportingEvents.API.gRPCServices
         {
             var type = await _typeOfSportingEventService.GetById(request);
 
-            return new TypeOfSportingEventGrpc { TypeOfSportingEventId = type?.TypeOfSportingEventId.ToString(), TypeOfSportingEventName = type.TypeOfSportingEventName };
+            return new TypeOfSportingEventGrpc { TypeOfSportingEventId = type?.TypeOfSportingEventId.ToString(), TypeOfSportingEventName = type?.TypeOfSportingEventName };
         }
     }
 }

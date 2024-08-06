@@ -2,9 +2,11 @@ using Identity.API.Application;
 using Identity.API.Core.Interfaces;
 using Identity.API.Core.Interfaces.UnitOfWork;
 using Identity.API.Endpoints.Mapster;
+using Identity.API.gRPCServices;
 using Identity.API.Infrastructure;
 using Identity.API.Infrastructure.Repositories;
 using Identity.API.Infrastructure.Repositories.UnitOfWork;
+using Identity.API.Interceptors;
 using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -67,6 +69,12 @@ namespace Identity.API
 
             builder.Services.AddHttpClient();
 
+            builder.Services.AddGrpc(opt =>
+            {
+                opt.Interceptors.Add<ExceptionInterceptor>();
+            });
+            builder.Services.AddGrpcReflection();
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -81,6 +89,8 @@ namespace Identity.API
 
             app.UseMiddleware<ProtocolLoggingMiddleware>();
             app.MapControllers();
+            app.MapGrpcService<UserGRPCService>();
+            app.MapGrpcReflectionService();
 
             app.Run();
         }
@@ -98,7 +108,7 @@ namespace Identity.API
 
         public async Task Invoke(HttpContext context)
         {
-            _logger.LogWarning($"Protocol: {context.Request.Protocol}");
+            _logger.LogWarning(message: $"Protocol: {context.Request.Protocol}");
 
             await _next(context);
         }

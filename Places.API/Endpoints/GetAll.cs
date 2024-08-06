@@ -20,7 +20,6 @@ namespace Places.API.Endpoints
         }
 
         [HttpGet("api/v1/places")]
-        [Authorize(Roles = "User")]
         public override async Task<ActionResult<PaginationList<Place>>> HandleAsync([FromQuery]PlaceQueryParameters queryParameters, CancellationToken cancellationToken = default)
         {
             var places = await _placeService.GetAll(queryParameters);

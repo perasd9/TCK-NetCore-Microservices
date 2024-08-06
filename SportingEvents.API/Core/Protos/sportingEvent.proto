@@ -9,6 +9,8 @@ import "Core/Protos/user.proto";
 service gRPCSportingEventService{
 	rpc GetAll(QueryParameters) returns (PaginationList);
 	rpc GetById(UUID) returns (SportingEventGrpc);
+	rpc IncreaseAvailableTickets(IncreaseAvailableTicketsRequestGRPC) returns (Empty);
+	rpc DecreaseAvailableTickets(DecreaseAvailableTicketsRequestGRPC) returns (Empty);
 }
 
 //basic example in case of request without query params
@@ -51,4 +53,14 @@ message PaginationList{
 	int32 totalPages = 4;
 	bool hasPrevious = 5;
 	bool hasNext = 6;
+}
+
+message IncreaseAvailableTicketsRequestGRPC{
+	UUID SportingEventId = 1;
+	int32 Amount = 2;
+}
+
+message DecreaseAvailableTicketsRequestGRPC{
+	UUID SportingEventId = 1;
+	int32 Amount = 2;
 }

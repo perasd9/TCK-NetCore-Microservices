@@ -45,7 +45,8 @@ namespace Identity.API.Infrastructure.Repositories
         {
             var user = await _context.Users.FindAsync(id);
 
-            if(user != null) user.LoyaltyPoints += loyaltyPoints;
+            if (user != null) user.LoyaltyPoints += loyaltyPoints;
+            else throw new Exception();
         }
 
         public async Task DecreaseLoyaltyPoints(Guid id, double loyaltyPoints)
@@ -53,6 +54,7 @@ namespace Identity.API.Infrastructure.Repositories
             var user = await _context.Users.FindAsync(id);
 
             if (user != null) user.LoyaltyPoints -= loyaltyPoints;
+            else throw new Exception();
         }
     }
 }

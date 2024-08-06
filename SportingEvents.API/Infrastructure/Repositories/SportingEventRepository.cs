@@ -33,6 +33,7 @@ namespace SportingEvents.API.Infrastructure.Repositories
             var @event = await _context.SportingEvents.FindAsync(id);
 
             if (@event != null) @event.AvailableTickets -= availableTickets;
+            else throw new Exception();
         }
 
         public async Task IncreaseAvailableTickets(Guid id, int availableTickets)
@@ -40,6 +41,7 @@ namespace SportingEvents.API.Infrastructure.Repositories
             var @event = await _context.SportingEvents.FindAsync(id);
 
             if (@event != null) @event.AvailableTickets += availableTickets;
+            else throw new Exception();
         }
     }
 }

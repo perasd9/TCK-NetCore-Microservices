@@ -8,6 +8,7 @@ import "Core/Protos/reservationComponent.proto";
 service gRPCReservationService{
 	rpc GetAll(QueryParameters) returns (PaginationList);
 	rpc GetById(UUID) returns (ReservationGrpc);
+	rpc Add(CreateReservationGrpc) returns (Empty);
 }
 
 //basic example in case of request without query params
@@ -32,6 +33,14 @@ message ReservationGrpc{
 	google.protobuf.Timestamp dateOfReservation = 3;
 	string userId = 4;
 	repeated ReservationComponentGrpc  reservationComponents = 5;
+
+}
+
+message CreateReservationGrpc{
+	double sumPrice = 1;
+	google.protobuf.Timestamp dateOfReservation = 2;
+	string userId = 3;
+	repeated ReservationComponentGrpc  reservationComponents = 4;
 
 }
 

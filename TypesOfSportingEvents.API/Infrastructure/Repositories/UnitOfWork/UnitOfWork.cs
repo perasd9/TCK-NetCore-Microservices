@@ -6,15 +6,21 @@ namespace TypesOfSportingEvents.API.Infrastructure.Repositories.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        private TypesOfSportingEventsContext _context;
-        private readonly TypeOfSportingEventRepository _typeOfSportingEventRepository;
-        public UnitOfWork(TypesOfSportingEventsContext context)
+        private readonly TypesOfSportingEventsContext _context;
+        private readonly IServiceProvider _serviceProvider;
+        public UnitOfWork(TypesOfSportingEventsContext context, IServiceProvider serviceProvider)
         {
             _context = context;
-            _typeOfSportingEventRepository = new TypeOfSportingEventRepository(_context);
+            _serviceProvider = serviceProvider;
         }
 
-        public ITypeOfSportingEventRepository TypeOfSportingEventRepository => _typeOfSportingEventRepository;
+        public ITypeOfSportingEventRepository TypeOfSportingEventRepository
+        {
+            get
+            {
+                return _serviceProvider.GetRequiredService<ITypeOfSportingEventRepository>();
+            }
+        }
 
         public async Task SaveChanges() => await _context.SaveChangesAsync();
 

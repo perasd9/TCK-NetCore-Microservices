@@ -3,7 +3,7 @@ syntax = "proto3";
 option csharp_namespace = "Users.API.Core.Protos";
 
 
-service PlaceService{
+service gRPCPlaceService{
 	rpc GetAll(Empty) returns (PlaceList);
 }
 

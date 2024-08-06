@@ -9,7 +9,7 @@ namespace SportingEvents.API.Application
 {
     public class SportingEventService
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         public SportingEventService(IUnitOfWork unitOfWork)
         {
@@ -30,6 +30,19 @@ namespace SportingEvents.API.Application
             var items = await _unitOfWork.SportingEventRepository.GetAll(queryParameters).ToListAsync();
 
             return new PaginationList<SportingEvent>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize);
+        }
+
+        public async Task IncreaseAvailableTickets(Guid id, int availableTickets)
+        {
+            await _unitOfWork.SportingEventRepository.IncreaseAvailableTickets(id, availableTickets);
+
+            await _unitOfWork.SaveChanges();
+        }
+        public async Task DecreaseAvailableTickets(Guid id, int availableTickets)
+        {
+            await _unitOfWork.SportingEventRepository.DecreaseAvailableTickets(id, availableTickets);
+
+            await _unitOfWork.SaveChanges();
         }
     }
 }

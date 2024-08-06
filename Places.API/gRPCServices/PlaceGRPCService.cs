@@ -8,7 +8,7 @@ namespace Places.API.gRPCServices
 {
     public class PlaceGRPCService : gRPCPlaceService.gRPCPlaceServiceBase
     {
-        private PlaceService _placeService;
+        private readonly PlaceService _placeService;
 
         public PlaceGRPCService(PlaceService placeService)
         {

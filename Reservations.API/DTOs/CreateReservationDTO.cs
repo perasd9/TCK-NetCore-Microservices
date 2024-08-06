@@ -7,6 +7,6 @@ namespace Reservations.API.DTOs
         public double SumPrice { get; set; }
         public DateTime DateOfReservation { get; set; }
         public Guid UserId { get; set; }
-        public IList<ReservationComponent>? ReservationComponents { get; set; }
+        public IList<CreateReservationComponentDTO>? ReservationComponents { get; set; }
     }
 }

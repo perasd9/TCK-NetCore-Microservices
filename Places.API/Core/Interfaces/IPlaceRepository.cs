@@ -7,9 +7,9 @@ namespace Places.API.Core.Interfaces
     public interface IPlaceRepository
     {
         //REST METHOD
-        public IQueryable<Place> GetAll(PlaceQueryParameters queryParameters);
+        public Task<List<Place>> GetAll(PlaceQueryParameters queryParameters);
         //GRPC METHOD
-        public IQueryable<Place> GetAll(QueryParameters queryParameters);
+        public Task<List<Place>> GetAll(QueryParameters queryParameters);
 
         public Task<Place?> GetById(Guid id);
     }

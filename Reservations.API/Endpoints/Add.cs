@@ -20,11 +20,22 @@ namespace Reservations.API.Endpoints
             _mapper = mapper;
         }
 
-        public override Task<ActionResult> HandleAsync(CreateReservationDTO request, CancellationToken cancellationToken = default)
+        [HttpPost("api/v1/reservations")]
+        public async override Task<ActionResult> HandleAsync([FromBody] CreateReservationDTO request, CancellationToken cancellationToken = default)
         {
             var reservation = _mapper.Map<Reservation>(request);
 
-            _reservationService.
+            try
+            {
+                await _reservationService.Add(reservation);
+            }
+            catch (Exception)
+            {
+
+                return BadRequest();
+            }
+
+            return Ok(reservation);
         }
     }
 }

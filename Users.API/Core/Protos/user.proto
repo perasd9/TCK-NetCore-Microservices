@@ -1,0 +1,60 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Users.API.Core.Protos";
+import "google/protobuf/timestamp.proto";
+import "Core/Protos/place.proto";
+import "Core/Protos/role.proto";
+
+service gRPCUserService{
+	rpc GetAll(Empty) returns (stream UserGrpc);
+	rpc IncreaseLoyaltyPoints(IncreaseLoyaltyPointsRequestGRPC) returns (Empty);
+	rpc DecreaseLoyaltyPoints(DecreaseLoyaltyPointsRequestGRPC) returns (Empty);
+	rpc Login(LoginRequestGRPC) returns (Empty);
+	rpc Register(RegisterRequestGRPC) returns (Empty);
+}
+
+message UserGrpc{
+	UUID UserId = 1;
+	string JMBG = 2;
+	string Name = 3;
+	string Surname = 4;
+	google.protobuf.Timestamp DateOfBirth = 5;
+	string Email = 6;
+	string Password = 7;
+	UUID PlaceId = 8;
+	PlaceGrpc Place = 9;
+	UUID RoleId = 10;
+	RoleGrpc Role = 11;
+	double LoyaltyPoints = 12;
+}
+
+message UserList{
+	repeated UserGrpc users = 1;
+}
+
+message IncreaseLoyaltyPointsRequestGRPC{
+	UUID UserId = 1;
+	double Amount = 2;
+}
+
+message DecreaseLoyaltyPointsRequestGRPC{
+	UUID UserId = 1;
+	double Amount = 2;
+}
+
+message LoginRequestGRPC{
+	string Email = 1;
+	string Password = 2;
+}
+
+message RegisterRequestGRPC{
+	UUID UserId = 1;
+	string JMBG = 2;
+	string Name = 3;
+	string Surname = 4;
+	google.protobuf.Timestamp DateOfBirth = 5;
+	string Email = 6;
+	string Password = 7;
+	UUID PlaceId = 8;
+	UUID RoleId = 9;
+}

@@ -16,16 +16,16 @@ namespace TypesOfSportingEvents.API.Infrastructure.Repositories
         }
 
         //REST METHOD
-        public IQueryable<TypeOfSportingEvent> GetAll(TypeOfSportingEventQueryParameters queryParameters) => _context.TypesOfSportingEvents.AsNoTracking()
+        public async Task<List<TypeOfSportingEvent>> GetAll(TypeOfSportingEventQueryParameters queryParameters) => await _context.TypesOfSportingEvents.AsNoTracking()
             .Where(type => type.TypeOfSportingEventName.Contains(queryParameters.Search!.Trim().ToLower()))
                 .OrderBy(type => type.TypeOfSportingEventName)
-                    .Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize).Take(queryParameters.PageSize);
+                    .Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize).Take(queryParameters.PageSize).ToListAsync();
 
         //GRPC METHOD
-        public IQueryable<TypeOfSportingEvent> GetAll(QueryParameters queryParameters) => _context.TypesOfSportingEvents.AsNoTracking()
+        public async Task<List<TypeOfSportingEvent>> GetAll(QueryParameters queryParameters) => await _context.TypesOfSportingEvents.AsNoTracking()
             .Where(type => type.TypeOfSportingEventName.Contains(queryParameters.Search!.Trim().ToLower()))
                 .OrderBy(type => type.TypeOfSportingEventName)
-                    .Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize).Take(queryParameters.PageSize);
+                    .Skip((queryParameters.PageNumber - 1) * queryParameters.PageSize).Take(queryParameters.PageSize).ToListAsync();
 
         public async Task<TypeOfSportingEvent?> GetById(Guid id) => await _context.TypesOfSportingEvents.FindAsync(id);
     }

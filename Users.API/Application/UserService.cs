@@ -17,5 +17,19 @@ namespace Identity.API.Application
         {
             return await _unitOfWork.UserRepository.GetAll().ToListAsync();
         }
+
+        public async Task IncreaseLoyaltyPoints(Guid id, double loyaltyPoints)
+        {
+            await _unitOfWork.UserRepository.IncreaseLoyaltyPoints(id, loyaltyPoints);
+
+            await _unitOfWork.SaveChanges();
+        }
+
+        public async Task DecreaseLoyaltyPoints(Guid id, double loyaltyPoints)
+        {
+            await _unitOfWork.UserRepository.DecreaseLoyaltyPoints(id, loyaltyPoints);
+
+            await _unitOfWork.SaveChanges();
+        }
     }
 }

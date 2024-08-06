@@ -9,7 +9,7 @@ namespace Places.API.Application
 {
     public class PlaceService
     {
-        private IUnitOfWork _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
         public PlaceService(IUnitOfWork unitOfWork)
         {
@@ -19,7 +19,7 @@ namespace Places.API.Application
         //REST METHOD
         public async Task<PaginationList<Place>> GetAll(PlaceQueryParameters queryParameters)
         {
-            var items = await _unitOfWork.PlaceRepository.GetAll(queryParameters).ToListAsync();
+            var items = await _unitOfWork.PlaceRepository.GetAll(queryParameters);
 
             return new PaginationList<Place>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize);
         }
@@ -27,7 +27,7 @@ namespace Places.API.Application
         //GRPC METHOD
         public async Task<PaginationList<Place>> GetAll(QueryParameters queryParameters)
         {
-            var items = await _unitOfWork.PlaceRepository.GetAll(queryParameters).ToListAsync();
+            var items = await _unitOfWork.PlaceRepository.GetAll(queryParameters);
 
             return new PaginationList<Place>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize);
         }

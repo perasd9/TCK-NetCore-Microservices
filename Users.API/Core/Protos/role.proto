@@ -1,0 +1,15 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Users.API.Core.Protos";
+
+message UUID{
+	string id = 1;
+}
+message RoleGrpc{
+	UUID RoleId = 1;
+	string RoleName = 2;
+}
+
+message RoleList{
+	repeated RoleGrpc roles = 1;
+}

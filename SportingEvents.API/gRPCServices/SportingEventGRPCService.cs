@@ -8,7 +8,7 @@ namespace SportingEvents.API.gRPCServices
 {
     public class SportingEventGRPCService : gRPCSportingEventService.gRPCSportingEventServiceBase
     {
-        private SportingEventService _sportingEventService;
+        private readonly SportingEventService _sportingEventService;
 
         public SportingEventGRPCService(SportingEventService sportingEventService)
         {
@@ -39,6 +39,43 @@ namespace SportingEvents.API.gRPCServices
 
             ProtoBuf.Serializer.Serialize(memoryStream, events);
             return memoryStream.ToArray();
+        }
+
+        public override Task<SportingEventGrpc> GetById(UUID request, ServerCallContext context)
+        {
+            return base.GetById(request, context);
+        }
+
+        public async override Task<Empty> DecreaseAvailableTickets(DecreaseAvailableTicketsRequestGRPC request, ServerCallContext context)
+        {
+            try
+            {
+                await _sportingEventService.DecreaseAvailableTickets(new Guid(request.SportingEventId.Id), request.Amount);
+                return new();
+
+            }
+            catch (Exception)
+            {
+                context.Status = new Status(StatusCode.InvalidArgument, "Bad request!");
+                return new();
+
+            }
+        }
+
+        public async override Task<Empty> IncreaseAvailableTickets(IncreaseAvailableTicketsRequestGRPC request, ServerCallContext context)
+        {
+            try
+            {
+                await _sportingEventService.IncreaseAvailableTickets(new Guid(request.SportingEventId.Id), request.Amount);
+                return new();
+
+            }
+            catch (Exception)
+            {
+                context.Status = new Status(StatusCode.InvalidArgument, "Bad request!");
+                return new();
+
+            }
         }
     }
 }

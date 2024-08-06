@@ -15,7 +15,7 @@ namespace Reservations.API.Endpoints
         .WithRequest<ReservationQueryParameters>
         .WithActionResult<PaginationList<Reservation>>
     {
-        private ReservationService _reservationService;
+        private readonly ReservationService _reservationService;
         private readonly IHttpClientFactory _httpClientFactory;
 
         public GetAll(ReservationService reservationService, IHttpClientFactory httpClientFactory)

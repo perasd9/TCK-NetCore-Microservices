@@ -5,14 +5,20 @@ namespace Places.API.Infrastructure.Repositories.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        private readonly PlaceRepository _placeRepository;
+        private readonly IServiceProvider _serviceProvider;
         private readonly PlacesContext _context;
-        public UnitOfWork(PlacesContext context)
+        public UnitOfWork(PlacesContext context, IServiceProvider serviceProvider)
         {
             _context = context;
-            _placeRepository = new PlaceRepository(_context);
+            _serviceProvider = serviceProvider;
         }
-        public IPlaceRepository PlaceRepository => _placeRepository;
+        public IPlaceRepository PlaceRepository
+        {
+            get
+            {
+                return _serviceProvider.GetRequiredService<IPlaceRepository>();
+            }
+        }
 
         public async Task SaveChanges() => await _context.SaveChangesAsync();
 

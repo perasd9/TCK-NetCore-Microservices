@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TypesOfSportingEvents.API.Application;
@@ -8,8 +9,10 @@ using TypesOfSportingEvents.API.Core.Interfaces;
 using TypesOfSportingEvents.API.Core.Interfaces.UnitOfWork;
 using TypesOfSportingEvents.API.gRPCServices;
 using TypesOfSportingEvents.API.Infrastructure;
+using TypesOfSportingEvents.API.Infrastructure.CachingRepository;
 using TypesOfSportingEvents.API.Infrastructure.Repositories;
 using TypesOfSportingEvents.API.Infrastructure.Repositories.UnitOfWork;
+using TypesOfSportingEvents.API.Interceptors;
 
 namespace TypesOfSportingEvents.API
 {
@@ -26,12 +29,26 @@ namespace TypesOfSportingEvents.API
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddMemoryCache();
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddTransient<ITypeOfSportingEventRepository, TypeOfSportingEventRepository>();
+
+            builder.Services.AddScoped<TypeOfSportingEventRepository>();
+            builder.Services.AddScoped<ITypeOfSportingEventRepository>(sp =>
+            {
+                var typeRepository = sp.GetRequiredService<TypeOfSportingEventRepository>();
+
+                var cache = sp.GetRequiredService<IMemoryCache>();
+
+                return new CachingTypeOfSportingEventRepository(cache, typeRepository);
+            });
+
             builder.Services.AddTransient<TypeOfSportingEventService>();
 
-            builder.Services.AddGrpc();
+            builder.Services.AddGrpc(opt =>
+            {
+                opt.Interceptors.Add<ExceptionInterceptor>();
+            });
 
             builder.Services.AddAuthentication(opt =>
             {
@@ -51,6 +68,7 @@ namespace TypesOfSportingEvents.API
             });
 
             builder.Services.AddGrpcReflection();
+
 
             var app = builder.Build();
 

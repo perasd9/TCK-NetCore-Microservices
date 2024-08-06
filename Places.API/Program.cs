@@ -1,16 +1,17 @@
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 using Places.API.Application;
 using Places.API.Core.Interfaces;
 using Places.API.Core.Interfaces.UnitOfWork;
-using Places.API.Endpoints;
 using Places.API.gRPCServices;
 using Places.API.Infrastructure;
 using Places.API.Infrastructure.Repositories;
+using Places.API.Infrastructure.Repositories.CachingRepository;
 using Places.API.Infrastructure.Repositories.UnitOfWork;
+using Places.API.Interceptors;
 using System.Text;
 
 namespace Places.API
@@ -30,6 +31,7 @@ namespace Places.API
 
                 serverOptions.ConfigureEndpointDefaults(lo => lo.Protocols = HttpProtocols.Http1AndHttp2);
 
+
             });
 
             builder.Services.AddControllers();
@@ -39,9 +41,20 @@ namespace Places.API
             {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+            builder.Services.AddMemoryCache();
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-            builder.Services.AddTransient<IPlaceRepository, PlaceRepository>();
+
+            builder.Services.AddScoped<PlaceRepository>();
+            builder.Services.AddScoped<IPlaceRepository, CachingPlaceRepository>(sp =>
+            {
+                var placeRepository = sp.GetRequiredService<PlaceRepository>();
+
+                var cache = sp.GetRequiredService<IMemoryCache>();
+
+                return new CachingPlaceRepository(placeRepository, cache);
+            });
+
             builder.Services.AddTransient<PlaceService>();
 
             builder.Services.AddAuthentication(opt =>
@@ -63,8 +76,12 @@ namespace Places.API
 
             builder.Services.AddAuthorization();
 
-            builder.Services.AddGrpc();
+            builder.Services.AddGrpc(opt =>
+            {
+                opt.Interceptors.Add<ExceptionInterceptor>();
+            });
             builder.Services.AddGrpcReflection();
+
 
             var app = builder.Build();
 
@@ -102,7 +119,7 @@ namespace Places.API
 
         public async Task Invoke(HttpContext context)
         {
-            _logger.LogWarning($"Protocol: {context.Request.Protocol}");
+            _logger.LogWarning(message: $"Protocol: {context.Request.Protocol}");
 
             await _next(context);
         }

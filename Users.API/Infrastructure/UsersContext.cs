@@ -21,10 +21,10 @@ namespace Identity.API.Infrastructure
             modelBuilder.ApplyConfiguration(new UsersConfiguration());
 
             modelBuilder.Entity<Role>().ToTable(nameof(Role));
-            modelBuilder.Entity<Role>().HasData(
-                    new Role { RoleId = new Guid(), RoleName = "User"},
-                    new Role { RoleId = new Guid(), RoleName = "Admin"}
-                );
+            //modelBuilder.Entity<Role>().HasData(
+            //        new Role { RoleId = new Guid(), RoleName = "User"},
+            //        new Role { RoleId = new Guid(), RoleName = "Admin"}
+            //    );
 
             modelBuilder.Ignore<Place>();
         }

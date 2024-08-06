@@ -10,6 +10,7 @@ using SportingEvents.API.gRPCServices;
 using SportingEvents.API.Infrastructure;
 using SportingEvents.API.Infrastructure.Repositories;
 using SportingEvents.API.Infrastructure.Repositories.UnitOfWork;
+using SportingEvents.API.Interceptors;
 using System.Text;
 
 namespace SportingEvents.API
@@ -52,7 +53,10 @@ namespace SportingEvents.API
             builder.Services.AddMapster();
             MapsterConfig.Configure();
 
-            builder.Services.AddGrpc();
+            builder.Services.AddGrpc(opt =>
+            {
+                opt.Interceptors.Add<ExceptionInterceptor>();
+            });
             builder.Services.AddGrpcReflection();
 
             var app = builder.Build();
