@@ -35,7 +35,13 @@ namespace Identity.API.gRPCServices
             //var client = new gRPCPlaceService.gRPCPlaceServiceClient(channel);
 
 
-            var users = await _userService.GetAll();
+            var result = await _userService.GetAll();
+            List<User> users;
+
+            if (result.IsSuccess)
+                users = result.Value;
+            else
+                return;
 
             foreach (var user in users)
             {
@@ -60,9 +66,9 @@ namespace Identity.API.gRPCServices
         {
             User? user = _mapper.Map<User>(request);
 
-            user = await _authervice.LoginUser(user);
+            var result = await _authervice.LoginUser(user);
 
-            context.Status =  user == null ? new Status(StatusCode.Unauthenticated, "Invalid Credentials!")
+            context.Status = result.IsSuccess ? new Status(StatusCode.Unauthenticated, "Invalid Credentials!")
                 : new Status(StatusCode.OK, _authervice.GenerateToken(user));
 
             return new();

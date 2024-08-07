@@ -17,8 +17,8 @@ namespace Places.API.gRPCServices
 
         public async override Task<PaginationList> GetAll(QueryParameters request, ServerCallContext context)
         {
-            var places = await _placeService.GetAll(request);
-
+            var places = (await _placeService.GetAll(request)).Value;
+           
             var pagination = new PaginationList
             {
                 HasNext = places.HasNext,
@@ -43,7 +43,7 @@ namespace Places.API.gRPCServices
 
         public async override Task<PlaceGrpc> GetById(UUID request, ServerCallContext context)
         {
-            var place = await _placeService.GetById(request);
+            var place = (await _placeService.GetById(request)).Value;
 
             return new PlaceGrpc { PlaceId = place?.PlaceId.ToString(), PlaceName = place?.PlaceName };
         }

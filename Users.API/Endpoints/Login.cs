@@ -1,6 +1,7 @@
 ﻿using Ardalis.ApiEndpoints;
 using Identity.API.Application;
 using Identity.API.Core;
+using Identity.API.Core.Abstractions;
 using Identity.API.DTOs;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -25,11 +26,9 @@ namespace Identity.API.Endpoints
         {
             User? user = _mapper.Map<User>(request);
 
-            user = await _authenticationService.LoginUser(user);
+            var result = await _authenticationService.LoginUser(user);
 
-            if (user == null) return Unauthorized();
-
-            return user == null ? BadRequest("Wrong credentials!") : Ok(_authenticationService.GenerateToken(user));
+            return result.IsSuccess ? Ok(_authenticationService.GenerateToken(user)) : ApiResults.Problem(result);
         }
     }
 }

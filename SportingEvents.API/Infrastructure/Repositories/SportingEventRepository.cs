@@ -43,5 +43,7 @@ namespace SportingEvents.API.Infrastructure.Repositories
             if (@event != null) @event.AvailableTickets += availableTickets;
             else throw new Exception();
         }
+
+        public async Task<SportingEvent?> GetById(Guid id) => await _context.SportingEvents.FindAsync(id);
     }
 }

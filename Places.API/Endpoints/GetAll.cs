@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Places.API.Application;
 using Places.API.Core;
+using Places.API.Core.Abstractions;
 using Places.API.Core.Pagination;
 using Places.API.Endpoints.QueryParameters;
 
@@ -22,9 +23,9 @@ namespace Places.API.Endpoints
         [HttpGet("api/v1/places")]
         public override async Task<ActionResult<PaginationList<Place>>> HandleAsync([FromQuery]PlaceQueryParameters queryParameters, CancellationToken cancellationToken = default)
         {
-            var places = await _placeService.GetAll(queryParameters);
+            var result = await _placeService.GetAll(queryParameters);
 
-            return Ok(places);
+            return result.IsSuccess ? Ok(result.Value) : ApiResults.Problem(result);
         }
     }
 }

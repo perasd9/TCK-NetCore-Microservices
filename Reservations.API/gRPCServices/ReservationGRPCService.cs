@@ -20,7 +20,7 @@ namespace Reservations.API.gRPCServices
 
         public async override Task<PaginationList> GetAll(QueryParameters request, ServerCallContext context)
         {
-            var reservations = await _reservationService.GetAll(request);
+            var reservations = (await _reservationService.GetAll(request)).Value;
 
             var pagination = new PaginationList
             {

@@ -8,6 +8,7 @@ namespace SportingEvents.API.Core.Interfaces
     {
         public IQueryable<SportingEvent> GetAll(SportingEventQueryParameters queryParameters);
         public IQueryable<SportingEvent> GetAll(QueryParameters queryParameters);
+        public Task<SportingEvent?> GetById(Guid id);
 
         //saga operation commit
         public Task DecreaseAvailableTickets(Guid id, int availableTickets);

@@ -17,7 +17,7 @@ namespace SportingEvents.API.gRPCServices
 
         public async override Task<PaginationList> GetAll(QueryParameters request, ServerCallContext context)
         {
-            var events = await _sportingEventService.GetAll(request);
+            var events = (await _sportingEventService.GetAll(request)).Value;
 
             var pagination = new PaginationList
             {

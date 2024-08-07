@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Places.API.Core;
+using Places.API.Core.Abstractions;
 using Places.API.Core.Interfaces.UnitOfWork;
 using Places.API.Core.Pagination;
 using Places.API.Core.Protos;
@@ -17,31 +18,35 @@ namespace Places.API.Application
         }
 
         //REST METHOD
-        public async Task<PaginationList<Place>> GetAll(PlaceQueryParameters queryParameters)
+        public async Task<Result<PaginationList<Place>>> GetAll(PlaceQueryParameters queryParameters)
         {
             var items = await _unitOfWork.PlaceRepository.GetAll(queryParameters);
 
-            return new PaginationList<Place>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize);
+            return Result.Success(new PaginationList<Place>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize));
         }
 
         //GRPC METHOD
-        public async Task<PaginationList<Place>> GetAll(QueryParameters queryParameters)
+        public async Task<Result<PaginationList<Place>>> GetAll(QueryParameters queryParameters)
         {
             var items = await _unitOfWork.PlaceRepository.GetAll(queryParameters);
 
-            return new PaginationList<Place>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize);
+            return Result.Success(new PaginationList<Place>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize));
         }
 
         //REST METHOD
-        public async Task<Place?> GetById(Guid id)
+        public async Task<Result<Place>> GetById(Guid id)
         {
-            return await _unitOfWork.PlaceRepository.GetById(id);
+            var place = await _unitOfWork.PlaceRepository.GetById(id);
+
+            return place == null ? Result.Failure<Place>(PlaceErrors.DoesntExist) : Result.Success(place);
         }
 
         //GRPC METHOD
-        public async Task<Place?> GetById(UUID id)
+        public async Task<Result<Place>> GetById(UUID id)
         {
-            return await _unitOfWork.PlaceRepository.GetById(new Guid(id.Id));
+            var place = await _unitOfWork.PlaceRepository.GetById(new Guid(id.Id));
+
+            return place == null ? Result.Failure<Place>(PlaceErrors.DoesntExist) : Result.Success(place);
         }
     }
 }

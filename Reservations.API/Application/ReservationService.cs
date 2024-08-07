@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Reservations.API.Core;
+using Reservations.API.Core.Abstractions;
 using Reservations.API.Core.Interfaces.UnitOfWork;
 using Reservations.API.Core.Pagination;
 using Reservations.API.Core.Protos;
@@ -25,22 +26,22 @@ namespace Users.API.Application
         }
 
         //REST METHOD
-        public async Task<PaginationList<Reservation>> GetAll(ReservationQueryParameters queryParameters)
+        public async Task<Result<PaginationList<Reservation>>> GetAll(ReservationQueryParameters queryParameters)
         {
             var items = await _unitOfWork.ReservationRepository.GetAll(queryParameters).ToListAsync();
 
-            return new PaginationList<Reservation>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize);
+            return Result.Success(new PaginationList<Reservation>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize));
         }
 
         //GRPC METHOD
-        public async Task<PaginationList<Reservation>> GetAll(QueryParameters queryParameters)
+        public async Task<Result<PaginationList<Reservation>>> GetAll(QueryParameters queryParameters)
         {
             var items = await _unitOfWork.ReservationRepository.GetAll(queryParameters).ToListAsync();
 
-            return new PaginationList<Reservation>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize);
+            return Result.Success(new PaginationList<Reservation>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize));
         }
 
-        public async Task Add(Reservation reservation)
+        public async Task<Result> Add(Reservation reservation)
         {
             var http = _httpClientFactory.CreateClient();
 
@@ -54,9 +55,7 @@ namespace Users.API.Application
                     "application/json"));
 
             if (httpResponse.StatusCode != HttpStatusCode.OK)
-            {
-                throw new Exception();
-            }
+                return Result.Failure(ReservationErrors.IncreaseLoyaltyPoints(httpResponse.ToString()));
 
             foreach (var item in reservation.ReservationComponents!)
             {
@@ -78,7 +77,7 @@ namespace Users.API.Application
                                 JsonSerializer.Serialize(new object()),
                                 Encoding.UTF8,
                                 "application/json"));
-                        if (item1 == item) return;
+                        if (item1 == item) return Result.Failure(ReservationErrors.IncreaseAvailableTickets(httpResponse.ToString()));
                     }
                 }
             }
@@ -86,6 +85,8 @@ namespace Users.API.Application
             await _unitOfWork.SaveChanges();
 
             transaction.Complete();
+
+            return Result.Success();
         }
 
         public async Task Delete(Guid id)

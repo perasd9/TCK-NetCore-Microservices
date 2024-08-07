@@ -1,4 +1,5 @@
 ﻿using Identity.API.Core;
+using Identity.API.Core.Abstractions;
 using Identity.API.Core.Interfaces.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -19,29 +20,34 @@ namespace Identity.API.Application
             _configuration = configuration;
         }
 
-        public async Task Register(User user)
+        public async Task<Result> Register(User user)
         {
             Role? role = await _unitOfWork.RoleRepository.GetByCondition(role => role.RoleName == "User").FirstOrDefaultAsync();
+
+            if (role == null) return Result.Failure(UserErrors.RoleDoesntExist);
+
             user.RoleId = role.RoleId;
             user.Password = HashPassword(user.Password);
 
             await _unitOfWork.UserRepository.Add(user);
             
             await _unitOfWork.SaveChanges();
+
+            return Result.Success();
         }
 
-        public async Task<User?> LoginUser(User user)
+        public async Task<Result<User>> LoginUser(User user)
         {
             User? userDb = await _unitOfWork.UserRepository.GetByCondition(u => u.Email == user.Email, "Role").SingleOrDefaultAsync();
             if (userDb != null)
             {
                 if(CheckPasswordHash(user.Password, userDb.Password))
                 {
-                    return userDb;
+                    return Result.Success(userDb);
                 }
             }
 
-            return null;
+            return Result.Failure<User>(UserErrors.NotFound);
         }
 
         //helper methods for hashing and verifying hash value
@@ -65,7 +71,7 @@ namespace Identity.API.Application
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(JwtRegisteredClaimNames.Name, user.UserId.ToString()),
-                    new Claim(ClaimTypes.Role, user.Role.RoleName)
+                    new Claim(ClaimTypes.Role, user.Role!.RoleName)
                 })
             };
             var tokenHandler = new JwtSecurityTokenHandler();
