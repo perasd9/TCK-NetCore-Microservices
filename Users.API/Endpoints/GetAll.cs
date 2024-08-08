@@ -16,60 +16,18 @@ namespace Identity.API.Endpoints
         .WithActionResult<IEnumerable<User>>
     {
         private readonly UserService _userService;
-        private readonly IHttpClientFactory _httpClientFactory;
 
-        public GetAll(UserService userService, IHttpClientFactory httpClientFactory)
+        public GetAll(UserService userService)
         {
             _userService = userService;
-            _httpClientFactory = httpClientFactory;
         }
 
         [HttpGet("api/v1/users")]
         public override async Task<ActionResult<IEnumerable<User>>> HandleAsync(CancellationToken cancellationToken = default)
         {
-            //HttpClient http = _httpClientFactory.CreateClient();
-
-            //http.DefaultRequestVersion = HttpVersion.Version20;
-
-            //HttpResponseMessage response = await http.GetAsync("https://localhost:9501/api/v1/places", cancellationToken);
-            var result = await _userService.GetAll();
-            //var places = JsonSerializer.Deserialize<List<Place>>(await response.Content.ReadAsStringAsync(cancellationToken), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-
-            //users[0].Place = places?[0];
+            var result = await _userService.GetAll(cancellationToken);
 
             return result.IsSuccess ? Ok(result.Value) : ApiResults.Problem(result);
-        }
-
-        [HttpGet("api/v2/users")]
-        public async Task<ActionResult> Handle(CancellationToken cancellationToken = default)
-        {
-            var httpHandler = new HttpClientHandler
-            {
-                ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
-            };
-
-            var channel = GrpcChannel.ForAddress("https://localhost:9501", new GrpcChannelOptions
-            {
-                HttpHandler = httpHandler
-            });
-
-            var client = new gRPCPlaceService.gRPCPlaceServiceClient(channel);
-
-            var request = new Empty();
-
-            var reply = await client.GetAllAsync(request);
-
-
-            var users = await _userService.GetAll();
-            var places = reply.Places.Select(placeGrpc => new Place()
-            {
-                PlaceId = new Guid(placeGrpc.PlaceId),
-                PlaceName = placeGrpc.PlaceName,
-            }).ToList();
-
-            //users[0].Place = places?[0];
-
-            return Ok(users);
         }
     }
 }

@@ -13,21 +13,6 @@ service gRPCSportingEventService{
 	rpc DecreaseAvailableTickets(DecreaseAvailableTicketsRequestGRPC) returns (Empty);
 }
 
-//basic example in case of request without query params
-message Empty{}
-
-//wrapper message for string guid
-message UUID{
-	string id = 1;
-}
-
-message QueryParameters{
-	string search = 1;
-	int32 pageNumber = 2;
-	int32 pageSize = 3;
-	string orderBy = 4;
-}
-
 message SportingEventGrpc{
 	string sportingEventId = 1;
 	string sportingEventName = 2;

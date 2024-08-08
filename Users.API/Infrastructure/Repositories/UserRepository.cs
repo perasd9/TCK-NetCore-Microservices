@@ -36,6 +36,8 @@ namespace Identity.API.Infrastructure.Repositories
             return query.AsSplitQuery();
         }
 
+        public async Task<User?> GetById(Guid id) => await _context.Users.FindAsync(id);
+
         public async Task Add(User user)
         {
             await _context.Users.AddAsync(user);

@@ -35,7 +35,6 @@ namespace Reservations.API.gRPCServices
             return pagination;
         }
 
-
         //helper method for serializing list
         private static byte[] SerializeListToBytes(IEnumerable<Reservation> reservations)
         {
@@ -45,26 +44,16 @@ namespace Reservations.API.gRPCServices
             return memoryStream.ToArray();
         }
 
-        public override Task<ReservationGrpc> GetById(UUID request, ServerCallContext context)
-        {
-            return base.GetById(request, context);
-        }
-
         public async override Task<Empty> Add(CreateReservationGrpc request, ServerCallContext context)
         {
             var reservation = _mapper.Map<Reservation>(request);
 
-            try
-            {
-                await _reservationService.Add(reservation);
-                return new();
-            }
-            catch (Exception)
-            {
-                context.Status = new Status(StatusCode.InvalidArgument, "Bad request!");
-                return new();
-            }
+            var result = await _reservationService.Add(reservation);
 
+            context.Status = result.IsSuccess ? new Status(StatusCode.InvalidArgument, "Bad request!")
+                : new Status(StatusCode.OK, "Reservation created!");
+
+            return new();
         }
     }
 }

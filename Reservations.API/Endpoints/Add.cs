@@ -2,6 +2,7 @@
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
 using Reservations.API.Core;
+using Reservations.API.Core.Abstractions;
 using Reservations.API.DTOs;
 using Users.API.Application;
 
@@ -25,17 +26,9 @@ namespace Reservations.API.Endpoints
         {
             var reservation = _mapper.Map<Reservation>(request);
 
-            try
-            {
-                await _reservationService.Add(reservation);
-            }
-            catch (Exception)
-            {
+            var result = await _reservationService.Add(reservation);
 
-                return BadRequest();
-            }
-
-            return Ok(reservation);
+            return result.IsSuccess ? Ok("Reservation created!") : ApiResults.Problem(result);
         }
     }
 }

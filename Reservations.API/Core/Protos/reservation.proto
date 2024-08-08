@@ -7,7 +7,7 @@ import "Core/Protos/reservationComponent.proto";
 
 service gRPCReservationService{
 	rpc GetAll(QueryParameters) returns (PaginationList);
-	rpc GetById(UUID) returns (ReservationGrpc);
+	//rpc GetById(UUID) returns (ReservationGrpc);
 	rpc Add(CreateReservationGrpc) returns (Empty);
 }
 

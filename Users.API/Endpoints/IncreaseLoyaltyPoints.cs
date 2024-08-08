@@ -1,5 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using Identity.API.Application;
+using Identity.API.Core.Abstractions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.API.Endpoints
@@ -15,19 +16,11 @@ namespace Identity.API.Endpoints
             _userService = userService;
         }
         [HttpPut("api/v1/users/{id}/loyalty-points/increase")]
-        public override async Task<ActionResult> HandleAsync([FromRoute]IncreaseLoyaltyPointsRequest request, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult> HandleAsync([FromRoute] IncreaseLoyaltyPointsRequest request, CancellationToken cancellationToken = default)
         {
-            try
-            {
-                await _userService.IncreaseLoyaltyPoints(request.Id, request.Amount);
-            }
-            catch (Exception)
-            {
+            var result = await _userService.IncreaseLoyaltyPoints(request.Id, request.Amount);
 
-                return BadRequest();
-            }
-
-            return Ok();
+            return result.IsSuccess ? Ok("Loyalty points increased!") : ApiResults.Problem(result);
         }
     }
 

@@ -1,6 +1,7 @@
 ﻿using Ardalis.ApiEndpoints;
 using Microsoft.AspNetCore.Mvc;
 using SportingEvents.API.Application;
+using SportingEvents.API.Core.Abstractions;
 
 namespace SportingEvents.API.Endpoints
 {
@@ -15,19 +16,11 @@ namespace SportingEvents.API.Endpoints
             _sportingEventService = sportingEventService;
         }
         [HttpPut("api/v1/sporting-events/{id}/available-tickets/increase")]
-        public override async Task<ActionResult> HandleAsync([FromRoute]IncreaseAvailableTicketsRequest request, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult> HandleAsync([FromRoute] IncreaseAvailableTicketsRequest request, CancellationToken cancellationToken = default)
         {
-            try
-            {
-                await _sportingEventService.IncreaseAvailableTickets(request.Id, request.Amount);
-            }
-            catch (Exception)
-            {
+            var result = await _sportingEventService.IncreaseAvailableTickets(request.Id, request.Amount);
 
-                return BadRequest();
-            }
-
-            return Ok();
+            return result.IsSuccess ? Ok("Available tickets increased!") : ApiResults.Problem(result);
         }
     }
 

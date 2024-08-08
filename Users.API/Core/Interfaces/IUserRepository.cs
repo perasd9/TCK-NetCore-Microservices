@@ -6,6 +6,7 @@ namespace Identity.API.Core.Interfaces
     {
         public IQueryable<User> GetAll(string includes = "");
         public IQueryable<User> GetByCondition(Expression<Func<User, bool>> condition, string includes = "");
+        public Task<User?> GetById(Guid id);
         public Task Add(User user);
 
         //saga operation commit

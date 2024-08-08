@@ -6,8 +6,8 @@ namespace SportingEvents.API.Core
     public class TypeOfSportingEvent
     {
         [ProtoMember(1)]
-        public Guid PlaceId { get; set; }
+        public Guid TypeOfSportingEventId { get; set; }
         [ProtoMember(2)]
-        public string PlaceName { get; set; } = "";
+        public string TypeOfSportingEventName { get; set; } = "";
     }
 }

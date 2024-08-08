@@ -15,7 +15,7 @@ namespace TypesOfSportingEvents.API.gRPCServices
 
         public async override Task<PaginationList> GetAll(QueryParameters request, ServerCallContext context)
         {
-            var types = await _typeOfSportingEventService.GetAll(request);
+            var types = (await _typeOfSportingEventService.GetAll(request)).Value;
 
             var pagination = new PaginationList
             {
@@ -36,7 +36,7 @@ namespace TypesOfSportingEvents.API.gRPCServices
 
         public async override Task<TypeOfSportingEventGrpc> GetById(UUID request, ServerCallContext context)
         {
-            var type = await _typeOfSportingEventService.GetById(request);
+            var type = (await _typeOfSportingEventService.GetById(request)).Value;
 
             return new TypeOfSportingEventGrpc { TypeOfSportingEventId = type?.TypeOfSportingEventId.ToString(), TypeOfSportingEventName = type?.TypeOfSportingEventName };
         }

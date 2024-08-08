@@ -2,7 +2,41 @@ syntax = "proto3";
 
 option csharp_namespace = "SportingEvents.API.Core.Protos";
 
+service gRPCTypeOfSportingEventService{
+	rpc GetAll(QueryParameters) returns (PaginationListTypes);
+	rpc GetById(UUID) returns (TypeOfSportingEventGrpc);
+}
+
+//basic example in case of request without query params
+message Empty{}
+
+//wrapper message for string guid
+message UUID{
+	string id = 1;
+}
+
+message QueryParameters{
+	string search = 1;
+	int32 pageNumber = 2;
+	int32 pageSize = 3;
+	string orderBy = 4;
+}
+
 message TypeOfSportingEventGrpc{
 	string TypeOfSportingEventId = 1;
 	string TypeOfSportingEventName = 2;
+}
+
+//basic example in case of returning pure list
+message TypeOfSportingEventList{
+	repeated TypeOfSportingEventGrpc types = 1;
+}
+
+message PaginationListTypes{
+	repeated TypeOfSportingEventGrpc types = 1;
+	int32 pageIndex = 2;
+	int32 pageSize = 3;
+	int32 totalPages = 4;
+	bool hasPrevious = 5;
+	bool hasNext = 6;
 }

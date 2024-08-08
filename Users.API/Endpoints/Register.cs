@@ -1,6 +1,7 @@
 ﻿using Ardalis.ApiEndpoints;
 using Identity.API.Application;
 using Identity.API.Core;
+using Identity.API.Core.Abstractions;
 using Identity.API.DTOs;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -24,9 +25,9 @@ namespace Identity.API.Endpoints
         public override async Task<ActionResult> HandleAsync(RegisterUserDTO request, CancellationToken cancellationToken = default)
         {
             User user = _mapper.Map<User>(request);
-            await _authenticationService.Register(user);
+            var result = await _authenticationService.Register(user);
 
-            return Ok();
+            return result.IsSuccess ? Ok("User successfully registered!") : ApiResults.Problem(result);
         }
     }
 }

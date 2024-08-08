@@ -2,18 +2,38 @@ syntax = "proto3";
 
 option csharp_namespace = "Users.API.Core.Protos";
 
+import "Core/Protos/role.proto";
 
 service gRPCPlaceService{
-	rpc GetAll(Empty) returns (PlaceList);
+	rpc GetAll(QueryParameters) returns (PaginationList);
+	rpc GetById(UUID) returns (PlaceGrpc);
 }
 
+//basic example in case of request without query params
 message Empty{}
+
+message QueryParameters{
+	string search = 1;
+	int32 pageNumber = 2;
+	int32 pageSize = 3;
+	string orderBy = 4;
+}
 
 message PlaceGrpc{
 	string PlaceId = 1;
 	string PlaceName = 2;
 }
 
+//basic example in case of returning pure list
 message PlaceList{
 	repeated PlaceGrpc places = 1;
+}
+
+message PaginationList{
+	bytes places = 1;
+	int32 pageIndex = 2;
+	int32 pageSize = 3;
+	int32 totalPages = 4;
+	bool hasPrevious = 5;
+	bool hasNext = 6;
 }
