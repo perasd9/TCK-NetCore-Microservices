@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TypesOfSportingEvents.API.Application;
 using TypesOfSportingEvents.API.Core;
+using TypesOfSportingEvents.API.Core.Abstractions;
 
 namespace TypesOfSportingEvents.API.Endpoints
 {
@@ -21,9 +22,9 @@ namespace TypesOfSportingEvents.API.Endpoints
         [Authorize]
         public override async Task<ActionResult<TypeOfSportingEvent>> HandleAsync([FromRoute(Name = "id")]Guid request, CancellationToken cancellationToken = default)
         {
-            var type = await _typeOfSportingEventsService.GetById(request);
+            var result = await _typeOfSportingEventsService.GetById(request);
 
-            return Ok(type);
+            return result.IsSuccess ? Ok(result.Value) : ApiResults.Problem(result);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TypesOfSportingEvents.API.Core;
+using TypesOfSportingEvents.API.Core.Abstractions;
 using TypesOfSportingEvents.API.Core.Interfaces.UnitOfWork;
 using TypesOfSportingEvents.API.Core.Pagination;
 using TypesOfSportingEvents.API.Core.Protos;
@@ -17,33 +18,37 @@ namespace TypesOfSportingEvents.API.Application
         }
 
         //REST METHOD
-        public async Task<PaginationList<TypeOfSportingEvent>> GetAll(TypeOfSportingEventQueryParameters queryParameters)
+        public async Task<Result<PaginationList<TypeOfSportingEvent>>> GetAll(TypeOfSportingEventQueryParameters queryParameters)
         {
             var items = await _unitOfWork.TypeOfSportingEventRepository.GetAll(queryParameters);
 
 
-            return new PaginationList<TypeOfSportingEvent>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize);
+            return Result.Success(new PaginationList<TypeOfSportingEvent>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize));
         }
 
         //GRPC METHOD
-        public async Task<PaginationList<TypeOfSportingEvent>> GetAll(QueryParameters queryParameters)
+        public async Task<Result<PaginationList<TypeOfSportingEvent>>> GetAll(QueryParameters queryParameters)
         {
             var items = await _unitOfWork.TypeOfSportingEventRepository.GetAll(queryParameters);
 
 
-            return new PaginationList<TypeOfSportingEvent>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize);
+            return Result.Success(new PaginationList<TypeOfSportingEvent>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize));
         }
 
         //REST METHOD
-        public async Task<TypeOfSportingEvent?> GetById(Guid id)
+        public async Task<Result<TypeOfSportingEvent>> GetById(Guid id)
         {
-            return await _unitOfWork.TypeOfSportingEventRepository.GetById(id);
+            var type = await _unitOfWork.TypeOfSportingEventRepository.GetById(id);
+
+            return type == null ? Result.Failure<TypeOfSportingEvent>(TypeErrors.DoesntExist) : Result.Success(type);
         }
 
         //GRPC METHOD
-        public async Task<TypeOfSportingEvent?> GetById(UUID id)
+        public async Task<Result<TypeOfSportingEvent>> GetById(UUID id)
         {
-            return await _unitOfWork.TypeOfSportingEventRepository.GetById(new Guid(id.Id));
+            var type = await _unitOfWork.TypeOfSportingEventRepository.GetById(new Guid(id.Id));
+
+            return type == null ? Result.Failure<TypeOfSportingEvent>(TypeErrors.DoesntExist) : Result.Success(type);
         }
     }
 }

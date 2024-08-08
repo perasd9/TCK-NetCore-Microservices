@@ -12,11 +12,11 @@ namespace Places.API.Core.Abstractions
 
             var problemDetails = new ProblemDetails
             {
-                Title = GetTitle(result.Error),
+                Title = GetTitle(result.Error.Type),
                 Detail = GetDetail(result.Error),
-                Type = GetType(result.Error),
-                Status = GetStatusCode(result.Error),
-                Extensions = { { "errors", GetErrors(result) } }
+                Type = GetType(result.Error.Type),
+                Status = GetStatusCode(result.Error.Type),
+                Extensions = { { "errors", new[] { result.Error } } }
             };
 
             return new ObjectResult(problemDetails)
@@ -25,22 +25,19 @@ namespace Places.API.Core.Abstractions
             };
         }
 
-        private static IDictionary<string, object?>? GetErrors(Result result)
-        {
-            return new Dictionary<string, object?>
+        private static int? GetStatusCode(ErrorType type) =>
+            type switch
             {
-                { result.Error.Code, result.Error.Message }
+                ErrorType.Validation => StatusCodes.Status400BadRequest,
+                ErrorType.NotFound => StatusCodes.Status404NotFound,
+                ErrorType.Conflict => StatusCodes.Status409Conflict,
+                _ => StatusCodes.Status500InternalServerError
             };
-        }
 
-        private static int? GetStatusCode(Error error)
-        {
-            return (int)HttpStatusCode.BadRequest;
-        }
 
-        private static string? GetType(Error error)
+        private static string? GetType(ErrorType type)
         {
-            return nameof(error);
+            return nameof(type);
         }
 
         private static string? GetDetail(Error error)
@@ -48,9 +45,13 @@ namespace Places.API.Core.Abstractions
             return error.Message;
         }
 
-        private static string? GetTitle(Error error)
-        {
-            return error.Code;
-        }
+        private static string? GetTitle(ErrorType type) =>
+            type switch
+            {
+                ErrorType.Validation => "Bad Request",
+                ErrorType.NotFound => "Not Found",
+                ErrorType.Conflict => "Conflict",
+                _ => "Internal Server Error"
+            };
     }
 }
