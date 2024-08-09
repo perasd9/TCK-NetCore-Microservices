@@ -47,7 +47,7 @@ namespace Identity.API.Application
                 }
             }
 
-            return Result.Failure<User>(UserErrors.NotFound);
+            return Result.Failure<User>(Error.Validation("Users.Login", "Invalid Credentials!"));
         }
 
         //helper methods for hashing and verifying hash value

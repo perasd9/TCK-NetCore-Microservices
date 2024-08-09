@@ -6,7 +6,7 @@ import "Core/Protos/place.proto";
 import "Core/Protos/role.proto";
 
 service gRPCUserService{
-	rpc GetAll(Empty) returns (stream UserGrpc);
+	rpc GetAll(Empty) returns (stream UserList);
 	rpc IncreaseLoyaltyPoints(IncreaseLoyaltyPointsRequestGRPC) returns (Empty);
 	rpc DecreaseLoyaltyPoints(DecreaseLoyaltyPointsRequestGRPC) returns (Empty);
 	rpc Login(LoginRequestGRPC) returns (Empty);

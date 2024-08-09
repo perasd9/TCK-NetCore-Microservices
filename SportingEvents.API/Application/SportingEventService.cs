@@ -33,11 +33,11 @@ namespace SportingEvents.API.Application
 
             HttpResponseMessage response = await http.GetAsync("https://localhost:9201/api/v1/types", cancellationToken);
 
-            var types = JsonSerializer.Deserialize<List<TypeOfSportingEvent>>(await response.Content.ReadAsStringAsync(cancellationToken),
+            var types = JsonSerializer.Deserialize<PaginationList<TypeOfSportingEvent>>(await response.Content.ReadAsStringAsync(cancellationToken),
                 new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
             foreach (var item in items)
-                item.TypeOfSportingEvent = types?.FirstOrDefault(t => t.TypeOfSportingEventId == item.TypeOfSportingEventId);
+                item.TypeOfSportingEvent = types?.Items.FirstOrDefault(t => t.TypeOfSportingEventId == item.TypeOfSportingEventId);
 
             return Result.Success(new PaginationList<SportingEvent>(items, items.Count, queryParameters.PageNumber, queryParameters.PageSize));
         }

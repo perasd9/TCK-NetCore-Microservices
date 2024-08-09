@@ -1,4 +1,4 @@
-﻿namespace Places.API.Core.Pagination
+﻿namespace Identity.API.Core.Pagination
 {
     public class PaginationList<TEntity>
     {

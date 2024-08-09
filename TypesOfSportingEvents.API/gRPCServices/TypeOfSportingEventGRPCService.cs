@@ -15,6 +15,8 @@ namespace TypesOfSportingEvents.API.gRPCServices
 
         public async override Task<PaginationList> GetAll(QueryParameters request, ServerCallContext context)
         {
+            request.PageNumber = 1;
+            request.PageSize = int.MaxValue;
             var types = (await _typeOfSportingEventService.GetAll(request)).Value;
 
             var pagination = new PaginationList

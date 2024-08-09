@@ -1,0 +1,20 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Reservations.API.Core.Protos";
+
+import "Core/Protos/reservation.proto";
+
+service gRPCSportingEventService{
+	rpc IncreaseAvailableTickets(IncreaseAvailableTicketsRequestGRPC) returns (Empty);
+	rpc DecreaseAvailableTickets(DecreaseAvailableTicketsRequestGRPC) returns (Empty);
+}
+
+message IncreaseAvailableTicketsRequestGRPC{
+	UUID SportingEventId = 1;
+	int32 Amount = 2;
+}
+
+message DecreaseAvailableTicketsRequestGRPC{
+	UUID SportingEventId = 1;
+	int32 Amount = 2;
+}

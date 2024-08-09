@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option csharp_namespace = "Reservations.API.Core.Protos";
+import "Core/Protos/reservation.proto";
+
+service gRPCUserService{
+	rpc IncreaseLoyaltyPoints(IncreaseLoyaltyPointsRequestGRPC) returns (Empty);
+	rpc DecreaseLoyaltyPoints(DecreaseLoyaltyPointsRequestGRPC) returns (Empty);
+
+}
+
+message IncreaseLoyaltyPointsRequestGRPC{
+	UUID UserId = 1;
+	double Amount = 2;
+}
+
+message DecreaseLoyaltyPointsRequestGRPC{
+	UUID UserId = 1;
+	double Amount = 2;
+}

@@ -21,9 +21,9 @@ namespace Identity.API.gRPCServices
             _authervice = authervice;
         }
 
-        public async override Task GetAll(Empty request, IServerStreamWriter<UserGrpc> responseStream, ServerCallContext context)
+        public async override Task GetAll(Empty request, IServerStreamWriter<UserList> responseStream, ServerCallContext context)
         {
-            var result = await _userService.GetAll();
+            var result = await _userService.GetAllGrpc();
             List<User> users;
 
             if (result.IsSuccess)
@@ -31,26 +31,23 @@ namespace Identity.API.gRPCServices
             else
                 return;
 
-            foreach (var user in users)
+            var userMessage = users.Select(user => new UserGrpc
             {
-                var userMessage = new UserGrpc
-                {
-                    UserId = new UUID() { Id = user.UserId.ToString() },
-                    Name = user.Name,
-                    Email = user.Email,
-                    JMBG = user.JMBG,
-                    DateOfBirth = Timestamp.FromDateTime(DateTime.SpecifyKind(user.DateOfBirth, DateTimeKind.Utc)),
-                    LoyaltyPoints = user.LoyaltyPoints,
-                    Password = user.Password,
-                    Surname = user.Surname,
-                    RoleId = new UUID { Id = user.RoleId.ToString() },
-                    Role = new RoleGrpc { RoleId = new UUID { Id = user.RoleId.ToString() }, RoleName = user.Role!.RoleName },
-                    PlaceId = new UUID { Id = user.PlaceId.ToString() },
-                    Place = new PlaceGrpc { PlaceId = user.PlaceId.ToString(), PlaceName = user.Place!.PlaceName }
-                };
+                UserId = new UUID() { Id = user.UserId.ToString() },
+                Name = user.Name,
+                Email = user.Email,
+                JMBG = user.JMBG,
+                DateOfBirth = Timestamp.FromDateTime(DateTime.SpecifyKind(user.DateOfBirth, DateTimeKind.Utc)),
+                LoyaltyPoints = user.LoyaltyPoints,
+                Password = user.Password,
+                Surname = user.Surname,
+                RoleId = new UUID { Id = user.RoleId.ToString() },
+                Role = new RoleGrpc { RoleId = new UUID { Id = user.RoleId.ToString() }, RoleName = "" },
+                PlaceId = new UUID { Id = user.PlaceId.ToString() },
+                Place = new PlaceGrpc { PlaceId = user.PlaceId.ToString(), PlaceName = "" }
+            }).ToList();
 
-                await responseStream.WriteAsync(userMessage);
-            }
+                await responseStream.WriteAsync(new UserList { Users = { userMessage } });
         }
 
         public override async Task<Empty> Login(LoginRequestGRPC request, ServerCallContext context)

@@ -19,7 +19,7 @@ namespace TypesOfSportingEvents.API.Endpoints
         }
 
         [HttpGet("api/v1/types-of-sporting-events/{id}")]
-        [Authorize]
+        //[Authorize]
         public override async Task<ActionResult<TypeOfSportingEvent>> HandleAsync([FromRoute(Name = "id")]Guid request, CancellationToken cancellationToken = default)
         {
             var result = await _typeOfSportingEventsService.GetById(request);

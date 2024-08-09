@@ -2,12 +2,13 @@ import grpc from "k6/net/grpc";
 import { check } from "k6";
 
 export let options = {
-    vus: 100,
+    vus: 50,
     duration: "30s",
 };
 
 const client = new grpc.Client();
-client.load(["."], "../Places.API/Core/Protos");
+client.load(["."], "../Places.API/Core/Protos/place.proto");
+
 let i = 0;
 
 export default function () {

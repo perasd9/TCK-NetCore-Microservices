@@ -20,6 +20,8 @@ namespace Reservations.API.gRPCServices
 
         public async override Task<PaginationList> GetAll(QueryParameters request, ServerCallContext context)
         {
+            request.PageNumber = 1;
+            request.PageSize = int.MaxValue;
             var reservations = (await _reservationService.GetAll(request)).Value;
 
             var pagination = new PaginationList

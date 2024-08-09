@@ -17,6 +17,8 @@ namespace Places.API.gRPCServices
 
         public async override Task<PaginationList> GetAll(QueryParameters request, ServerCallContext context)
         {
+            request.PageNumber = 1;
+            request.PageSize = int.MaxValue;
             var places = (await _placeService.GetAll(request)).Value;
            
             var pagination = new PaginationList
