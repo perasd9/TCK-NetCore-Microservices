@@ -3,6 +3,7 @@ using Grpc.Core;
 using Identity.API.Application;
 using Identity.API.Core;
 using MapsterMapper;
+using Microsoft.AspNetCore.OutputCaching;
 using Users.API.Core.Protos;
 using Empty = Users.API.Core.Protos.Empty;
 
@@ -21,6 +22,7 @@ namespace Identity.API.gRPCServices
             _authervice = authervice;
         }
 
+        [OutputCache]
         public async override Task GetAll(Empty request, IServerStreamWriter<UserList> responseStream, ServerCallContext context)
         {
             var result = await _userService.GetAllGrpc();
@@ -42,12 +44,12 @@ namespace Identity.API.gRPCServices
                 Password = user.Password,
                 Surname = user.Surname,
                 RoleId = new UUID { Id = user.RoleId.ToString() },
-                Role = new RoleGrpc { RoleId = new UUID { Id = user.RoleId.ToString() }, RoleName = "" },
+                Role = new RoleGrpc { RoleId = new UUID { Id = user.RoleId.ToString() }, RoleName = user.Role!.RoleName },
                 PlaceId = new UUID { Id = user.PlaceId.ToString() },
-                Place = new PlaceGrpc { PlaceId = user.PlaceId.ToString(), PlaceName = "" }
+                Place = new PlaceGrpc { PlaceId = user.PlaceId.ToString(), PlaceName = user.Place!.PlaceName }
             }).ToList();
 
-                await responseStream.WriteAsync(new UserList { Users = { userMessage } });
+            await responseStream.WriteAsync(new UserList { Users = { userMessage } });
         }
 
         public override async Task<Empty> Login(LoginRequestGRPC request, ServerCallContext context)

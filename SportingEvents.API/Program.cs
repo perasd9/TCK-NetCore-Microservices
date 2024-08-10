@@ -67,6 +67,8 @@ namespace SportingEvents.API
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<ExceptionHandling>();
+
             app.UseHttpsRedirection();
 
             app.UseAuthentication();

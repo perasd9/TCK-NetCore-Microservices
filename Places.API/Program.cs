@@ -12,6 +12,7 @@ using Places.API.Infrastructure.Repositories;
 using Places.API.Infrastructure.Repositories.CachingRepository;
 using Places.API.Infrastructure.Repositories.UnitOfWork;
 using Places.API.Interceptors;
+using Places.API.Middlewares;
 using System.Text;
 
 namespace Places.API
@@ -91,6 +92,8 @@ namespace Places.API
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<ExceptionHandling>();
+
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
@@ -104,24 +107,6 @@ namespace Places.API
             app.UseMiddleware<ProtocolLoggingMiddleware>();
 
             app.Run();
-        }
-    }
-    public class ProtocolLoggingMiddleware
-    {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ProtocolLoggingMiddleware> _logger;
-
-        public ProtocolLoggingMiddleware(RequestDelegate next, ILogger<ProtocolLoggingMiddleware> logger)
-        {
-            _next = next;
-            _logger = logger;
-        }
-
-        public async Task Invoke(HttpContext context)
-        {
-            _logger.LogWarning(message: $"Protocol: {context.Request.Protocol}");
-
-            await _next(context);
         }
     }
 }

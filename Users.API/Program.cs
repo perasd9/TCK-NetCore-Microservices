@@ -7,6 +7,7 @@ using Identity.API.Infrastructure;
 using Identity.API.Infrastructure.Repositories;
 using Identity.API.Infrastructure.Repositories.UnitOfWork;
 using Identity.API.Interceptors;
+using Identity.API.Middlewares;
 using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -75,6 +76,8 @@ namespace Identity.API
             });
             builder.Services.AddGrpcReflection();
 
+            builder.Services.AddOutputCache();
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -83,7 +86,10 @@ namespace Identity.API
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<ExceptionHandling>();
+
             app.UseHttpsRedirection();
+            app.UseOutputCache();
 
             app.UseAuthorization();
 
@@ -93,24 +99,6 @@ namespace Identity.API
             app.MapGrpcReflectionService();
 
             app.Run();
-        }
-    }
-    public class ProtocolLoggingMiddleware
-    {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ProtocolLoggingMiddleware> _logger;
-
-        public ProtocolLoggingMiddleware(RequestDelegate next, ILogger<ProtocolLoggingMiddleware> logger)
-        {
-            _next = next;
-            _logger = logger;
-        }
-
-        public async Task Invoke(HttpContext context)
-        {
-            _logger.LogWarning(message: $"Protocol: {context.Request.Protocol}");
-
-            await _next(context);
         }
     }
 }

@@ -10,6 +10,7 @@ using Reservations.API.Infrastructure;
 using Reservations.API.Infrastructure.Repositories;
 using Reservations.API.Infrastructure.Repositories.UnitOfWork;
 using Reservations.API.Interceptors;
+using Reservations.API.Middlewares;
 using System.Text;
 using Users.API.Application;
 
@@ -69,6 +70,8 @@ namespace Reservations.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseMiddleware<ExceptionHandling>();
 
             app.UseHttpsRedirection();
 

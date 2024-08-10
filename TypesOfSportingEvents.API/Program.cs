@@ -13,6 +13,7 @@ using TypesOfSportingEvents.API.Infrastructure.CachingRepository;
 using TypesOfSportingEvents.API.Infrastructure.Repositories;
 using TypesOfSportingEvents.API.Infrastructure.Repositories.UnitOfWork;
 using TypesOfSportingEvents.API.Interceptors;
+using TypesOfSportingEvents.API.Middlewares;
 
 namespace TypesOfSportingEvents.API
 {
@@ -77,6 +78,8 @@ namespace TypesOfSportingEvents.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseMiddleware<ExceptionHandling>();
 
             app.UseHttpsRedirection();
 

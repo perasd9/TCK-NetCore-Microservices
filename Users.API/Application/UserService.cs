@@ -20,7 +20,7 @@ namespace Identity.API.Application
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly AsyncPolicyWrap<HttpResponseMessage> _policyWrap;
-        private readonly AsyncPolicyWrap<PaginationList> _policyWrapGrpc;
+        private readonly AsyncPolicyWrap _policyWrapGrpc;
 
         public UserService(IUnitOfWork unitOfWork, IHttpClientFactory httpClientFactory)
         {
@@ -35,8 +35,7 @@ namespace Identity.API.Application
                     Console.WriteLine($"Retry attempt {retryCount}");
                 });
 
-            var retryPolicyGrpc = Policy.HandleResult<PaginationList>(r => r == null)
-                .Or<Exception>()
+            var retryPolicyGrpc = Policy.Handle<Exception>()
                 .WaitAndRetryAsync(3, attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
                 (outcome, timeSpan, retryCount, context) =>
                 {
@@ -59,8 +58,7 @@ namespace Identity.API.Application
                     Console.WriteLine("Circuit breaker half-open");
                 });
 
-            var circuitBreakerPolicyGrpc = Policy.HandleResult<PaginationList>(r => r == null)
-                .Or<Exception>()
+            var circuitBreakerPolicyGrpc = Policy.Handle<Exception>()
                 .CircuitBreakerAsync(2, TimeSpan.FromMinutes(2),
                 onBreak: (outcome, timespan) =>
                 {
@@ -124,21 +122,23 @@ namespace Identity.API.Application
 
             var users = await _unitOfWork.UserRepository.GetAll("Role").ToListAsync(cancellationToken: cancellationToken);
 
-            var reply = await _policyWrapGrpc.ExecuteAsync(async () => await client.GetAllAsync(new(), cancellationToken: cancellationToken));
+            try
+            {
+                var reply = await _policyWrapGrpc.ExecuteAsync(async () => await client.GetAllAsync(new(), cancellationToken: cancellationToken));
 
-            if (reply == null)
+                using var memoryStream = new MemoryStream(reply.Places.ToByteArray());
+
+                var places = Serializer.Deserialize<List<Place>>(memoryStream);
+
+                foreach (var user in users)
+                    user.Place = places?.FirstOrDefault(p => p.PlaceId == user.PlaceId);
+
+                return Result.Success(users);
+            }
+            catch (Exception)
             {
                 return Result.Failure<List<User>>(Error.Failure("Users.PlacesFailure", "Failed to retrieve place"));
             }
-
-            using var memoryStream = new MemoryStream(reply.Places.ToByteArray());
-
-            var places = Serializer.Deserialize<List<Place>>(memoryStream);
-
-            foreach (var user in users)
-                user.Place = places?.FirstOrDefault(p => p.PlaceId == user.PlaceId);
-
-            return Result.Success(users);
         }
 
         public async Task<Result> IncreaseLoyaltyPoints(Guid id, double loyaltyPoints)

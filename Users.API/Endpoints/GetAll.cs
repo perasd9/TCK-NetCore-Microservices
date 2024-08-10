@@ -4,6 +4,7 @@ using Identity.API.Application;
 using Identity.API.Core;
 using Identity.API.Core.Abstractions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -23,6 +24,7 @@ namespace Identity.API.Endpoints
         }
 
         [HttpGet("api/v1/users")]
+        [OutputCache]
         public override async Task<ActionResult<IEnumerable<User>>> HandleAsync(CancellationToken cancellationToken = default)
         {
             var result = await _userService.GetAll(cancellationToken);

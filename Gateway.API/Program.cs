@@ -1,5 +1,6 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -37,6 +38,15 @@ namespace Gateway.API
 
             builder.Services.AddAuthorization();
 
+            builder.Services.AddRateLimiter(rateLimiterOptions =>
+            {
+                rateLimiterOptions.AddFixedWindowLimiter("fixed", options =>
+                {
+                    options.Window = TimeSpan.FromSeconds(10);
+                    options.PermitLimit = 5;
+                });
+            });
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -46,6 +56,8 @@ namespace Gateway.API
             }
 
             app.UseHttpsRedirection();
+
+            app.UseRateLimiter();
 
             app.UseAuthentication();
             app.UseAuthorization();
