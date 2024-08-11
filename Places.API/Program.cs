@@ -80,7 +80,7 @@ namespace Places.API
             builder.Services.AddGrpc(opt =>
             {
                 opt.Interceptors.Add<ExceptionInterceptor>();
-            });
+            }).AddJsonTranscoding();
             builder.Services.AddGrpcReflection();
 
 

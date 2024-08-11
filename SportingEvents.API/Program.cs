@@ -11,6 +11,7 @@ using SportingEvents.API.Infrastructure;
 using SportingEvents.API.Infrastructure.Repositories;
 using SportingEvents.API.Infrastructure.Repositories.UnitOfWork;
 using SportingEvents.API.Interceptors;
+using SportingEvents.API.Middlewares;
 using System.Text;
 
 namespace SportingEvents.API

@@ -14,7 +14,7 @@ namespace Places.API.gRPCServices
         {
             _placeService = placeService;
         }
-
+         
         public async override Task<PaginationList> GetAll(QueryParameters request, ServerCallContext context)
         {
             request.PageNumber = 1;

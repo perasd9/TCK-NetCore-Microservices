@@ -2,9 +2,16 @@ syntax = "proto3";
 
 option csharp_namespace = "Places.API.Core.Protos";
 
+import "Core/Protos/annotations.proto";
+import "Core/Protos/http.proto";
+
 
 service gRPCPlaceService{
-	rpc GetAll(QueryParameters) returns (PaginationList);
+	rpc GetAll(QueryParameters) returns (PaginationList){
+		    option (google.api.http) = {
+				get: "/api/v1/placesGRPC"
+    };
+	}
 	rpc GetById(UUID) returns (PlaceGrpc);
 }
 
