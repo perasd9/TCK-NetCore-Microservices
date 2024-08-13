@@ -3,8 +3,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Places.API.Core
 {
+    //JUST FOR TESTING PURPOSE OF MAPPING
     [ProtoContract]
-    public class Place
+    public class GetPlaceDTO
     {
         [ProtoMember(1)]
         public Guid PlaceId { get; set; }
@@ -87,40 +88,9 @@ namespace Places.API.Core
         public Field PlaceName26 { get; set; } = new Field();
         [NotMapped]
         [ProtoMember(28)]
-        public List<Field> PlaceName27 { get; set; } = new List<Field>() { new(), new(), new (), new ()};
+        public List<Field> PlaceName27 { get; set; } = new List<Field>() { new(), new(), new(), new() };
         [NotMapped]
         [ProtoMember(29)]
         public string PlaceName28 { get; set; } = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-    }
-
-    [ProtoContract]
-    public class Field
-    {
-        [ProtoMember(1)]
-        public Guid PlaceId { get; set; }
-        [ProtoMember(2)]
-        public string PlaceName { get; set; } = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-        [ProtoMember(3)]
-        [NotMapped]
-        public long PlaceName1 { get; set; } = 0L;
-        [NotMapped]
-        [ProtoMember(4)]
-        public long PlaceName2 { get; set; } = 0L;
-        [NotMapped]
-        [ProtoMember(5)]
-        public string PlaceName3 { get; set; } = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-        [NotMapped]
-        [ProtoMember(6)]
-        public long PlaceName4 { get; set; } = 0L;
-
-        public Field()
-        {
-            
-        }
-
-        public static implicit operator string(Field v)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

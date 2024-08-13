@@ -30,7 +30,11 @@ namespace Places.API
 
                 //ThreadPool.SetMinThreads(200, 200);
 
-                serverOptions.ConfigureEndpointDefaults(lo => lo.Protocols = HttpProtocols.Http1AndHttp2);
+                serverOptions.ConfigureEndpointDefaults(lo =>
+                {
+                    lo.Protocols = HttpProtocols.Http1AndHttp2;
+                    lo.UseHttps();
+                });
 
 
             });

@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Users.API.Application;
 using Reservations.API.Core;
 using Reservations.API.Endpoints.QueryParameters;
 using Reservations.API.Core.Pagination;
+using Reservations.API.Application;
 
 namespace Reservations.API.Endpoints
 {

@@ -2,16 +2,14 @@ syntax = "proto3";
 
 option csharp_namespace = "Places.API.Core.Protos";
 
-import "Core/Protos/annotations.proto";
-import "Core/Protos/http.proto";
-
 
 service gRPCPlaceService{
 	rpc GetAll(QueryParameters) returns (PaginationList){
-		    option (google.api.http) = {
-				get: "/api/v1/placesGRPC"
-    };
+		    //option (google.api.http) = {
+				//get: "/api/v1/placesGRPC"
+			//};
 	}
+	rpc GetAllLargeObjects(QueryParameters) returns (PaginationListWithLargeObject);
 	rpc GetById(UUID) returns (PlaceGrpc);
 }
 
@@ -35,13 +33,63 @@ message PlaceGrpc{
 	string PlaceName = 2;
 }
 
+message PlaceGrpcLargeObject{
+	string PlaceId = 1;
+	string PlaceName = 2;
+	string PlaceName2 = 3;
+	string PlaceName3 = 4;
+	string PlaceName4 = 5;
+	string PlaceName5 = 6;
+	string PlaceName6 = 7;
+	string PlaceName7 = 8;
+	string PlaceName8 = 9;
+	string PlaceName9 = 10;
+	string PlaceName11 = 11;
+	string PlaceName12 = 12;
+	string PlaceName13 = 13;
+	string PlaceName14 = 14;
+	string PlaceName15 = 15;
+	string PlaceName16 = 16;
+	Field PlaceName17 = 17;
+	Field PlaceName18 = 18;
+	Field PlaceName19 = 19;
+	repeated Field PlaceName20 = 20;
+	string PlaceName21 = 21;
+	string PlaceName22 = 22;
+	string PlaceName23 = 23;
+	string PlaceName24 = 24;
+	string PlaceName25 = 25;
+	string PlaceName26 = 26;
+	string PlaceName27 = 27;
+	string PlaceName28 = 28;
+}
+
+message Field{
+	int64 PlaceId = 1;
+	int64 PlaceName = 2;
+	int64 PlaceName2 = 3;
+	int64 PlaceName3 = 4;
+	string PlaceName4 = 5;
+	string PlaceName5 = 6;
+	string PlaceName6 = 7;
+}
+
 //basic example in case of returning pure list
 message PlaceList{
 	repeated PlaceGrpc places = 1;
 }
 
 message PaginationList{
-	bytes places = 1;
+	repeated PlaceGrpc places = 1;
+	int32 pageIndex = 2;
+	int32 pageSize = 3;
+	int32 totalPages = 4;
+	bool hasPrevious = 5;
+	bool hasNext = 6;
+}
+
+message PaginationListWithLargeObject{
+	repeated PlaceGrpcLargeObject places = 1;
 	int32 pageIndex = 2;
 	int32 pageSize = 3;
 	int32 totalPages = 4;

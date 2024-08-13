@@ -16,7 +16,7 @@ export default function () {
         client.connect("localhost:9201", {});
     }
 
-  let response = client.invoke("gRPCTypeOfSportingEventService/GetById", {"id":"6a85c3dc-6ac5-4b18-bbfd-60303c5c8967"});
+  let response = client.invoke("gRPCTypeOfSportingEventService/GetAll", {});
 
     check(response, {
         "status is OK": (r) => r && r.status === grpc.StatusOK,

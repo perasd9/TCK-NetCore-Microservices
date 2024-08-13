@@ -13,7 +13,7 @@ using System.Text;
 using System.Text.Json;
 using System.Transactions;
 
-namespace Users.API.Application
+namespace Reservations.API.Application
 {
     public class ReservationService
     {
@@ -206,7 +206,7 @@ namespace Users.API.Application
                 new IncreaseLoyaltyPointsRequestGRPC()
                 {
                     UserId = new UUID() { Id = reservation.UserId.ToString() },
-                    Amount = Double.Parse((reservation.ReservationComponents!.Count * 10).ToString())
+                    Amount = double.Parse((reservation.ReservationComponents!.Count * 10).ToString())
                 }));
             }
             catch (Exception)
@@ -234,7 +234,7 @@ namespace Users.API.Application
                     new DecreaseLoyaltyPointsRequestGRPC()
                     {
                         UserId = new UUID() { Id = reservation.UserId.ToString() },
-                        Amount = Double.Parse((reservation.ReservationComponents!.Count * 10).ToString())
+                        Amount = double.Parse((reservation.ReservationComponents!.Count * 10).ToString())
                     }));
 
                     foreach (var item1 in reservation.ReservationComponents!)

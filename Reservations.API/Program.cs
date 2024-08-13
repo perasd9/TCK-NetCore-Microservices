@@ -2,6 +2,7 @@ using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Reservations.API.Application;
 using Reservations.API.Core.Interfaces;
 using Reservations.API.Core.Interfaces.UnitOfWork;
 using Reservations.API.Endpoints.Mapster;
@@ -12,7 +13,6 @@ using Reservations.API.Infrastructure.Repositories.UnitOfWork;
 using Reservations.API.Interceptors;
 using Reservations.API.Middlewares;
 using System.Text;
-using Users.API.Application;
 
 namespace Reservations.API
 {

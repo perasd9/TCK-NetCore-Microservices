@@ -1,9 +1,9 @@
 ﻿using Google.Protobuf;
 using Grpc.Core;
 using MapsterMapper;
+using Reservations.API.Application;
 using Reservations.API.Core;
 using Reservations.API.Core.Protos;
-using Users.API.Application;
 
 namespace Reservations.API.gRPCServices
 {

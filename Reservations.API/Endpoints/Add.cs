@@ -1,10 +1,10 @@
 ﻿using Ardalis.ApiEndpoints;
 using MapsterMapper;
 using Microsoft.AspNetCore.Mvc;
+using Reservations.API.Application;
 using Reservations.API.Core;
 using Reservations.API.Core.Abstractions;
 using Reservations.API.DTOs;
-using Users.API.Application;
 
 namespace Reservations.API.Endpoints
 {
