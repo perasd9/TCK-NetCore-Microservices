@@ -26,37 +26,21 @@ namespace Places.API.Endpoints
         {
             var result = await _placeService.GetAll(queryParameters);
 
-            var values  = result.Value.Items.Select(p => new GetPlaceDTO()
+            PaginationList<GetPlaceDTO> values = new PaginationList<GetPlaceDTO>
             {
-                PlaceId = p.PlaceId,
-                PlaceName = p.PlaceName,
-                PlaceName22 = new Core.Field() { PlaceName3 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" },
-                PlaceName23 = new Core.Field() { PlaceName3 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" },
-                PlaceName24 = new Core.Field() { PlaceName3 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" },
-                PlaceName25 = new Core.Field() { PlaceName3 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" },
-                PlaceName26 = new Core.Field() { PlaceName3 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" },
-                PlaceName27 = { new Core.Field() { PlaceName3 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" }, },
-                PlaceName2 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName3 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName4 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName5 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName6 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName7 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName8 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName9 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName11 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName12 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName13 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName14 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName15 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName16 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName21 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName17 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName18 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName19 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName20 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName28 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-            })!;
+                Items = result.Value.Items.Select(p => new GetPlaceDTO()
+                {
+                    PlaceId = p.PlaceId,
+                    PlaceName = p.PlaceName,
+                    PlaceName22 = new Core.Field(),
+                    PlaceName23 = new Core.Field(),
+                    PlaceName24 = new Core.Field(),
+                    PlaceName25 = new Core.Field(),
+                    PlaceName26 = new Core.Field(),
+                    PlaceName27 = new List<Core.Field>() { new Core.Field() },
+                    PlaceName67 = new List<Core.Enumeration>(){ new Core.Enumeration() },
+                })
+            };
 
             return result.IsSuccess ? Ok(values) : ApiResults.Problem(result);
         }

@@ -62,6 +62,49 @@ message PlaceGrpcLargeObject{
 	string PlaceName26 = 26;
 	string PlaceName27 = 27;
 	string PlaceName28 = 28;
+	string PlaceName29 = 29;
+	string PlaceName30 = 30;
+	string PlaceName31 = 31;
+	string PlaceName32 = 32;
+	string PlaceName33 = 33;
+	string PlaceName34 = 34;
+	string PlaceName35 = 35;
+	string PlaceName36 = 36;
+	string PlaceName37 = 37;
+	string PlaceName38 = 38;
+	string PlaceName39 = 39;
+	string PlaceName40 = 40;
+	string PlaceName41 = 41;
+	string PlaceName42 = 42;
+	string PlaceName43 = 43;
+	string PlaceName44 = 44;
+	string PlaceName45 = 45;
+	string PlaceName46 = 46;
+	string PlaceName47 = 47;
+	string PlaceName48 = 48;
+	string PlaceName49 = 49;
+	string PlaceName50 = 50;
+	string PlaceName51 = 51;
+	string PlaceName52 = 52;
+	string PlaceName53 = 53;
+	string PlaceName54 = 54;
+	string PlaceName55 = 55;
+	string PlaceName56 = 56;
+	string PlaceName57 = 57;
+	string PlaceName58 = 58;
+	string PlaceName59 = 59;
+	string PlaceName60 = 60;
+	Enumeration PlaceName61 = 61;
+	Enumeration PlaceName62 = 62;
+	Enumeration PlaceName63 = 63;
+	Enumeration PlaceName64 = 64;
+	repeated Enumeration PlaceName65 = 65;
+}
+
+enum Enumeration {
+  Primary = 0;
+  Secondary = 1;
+
 }
 
 message Field{
@@ -89,7 +132,7 @@ message PaginationList{
 }
 
 message PaginationListWithLargeObject{
-	repeated PlaceGrpcLargeObject places = 1;
+	bytes places = 1;
 	int32 pageIndex = 2;
 	int32 pageSize = 3;
 	int32 totalPages = 4;

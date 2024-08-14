@@ -14,13 +14,13 @@ namespace Places.API.gRPCServices
         {
             _placeService = placeService;
         }
-         
+
         public async override Task<PaginationList> GetAll(QueryParameters request, ServerCallContext context)
         {
             request.PageNumber = 1;
             request.PageSize = int.MaxValue;
             var places = (await _placeService.GetAll(request)).Value;
-           
+
             var pagination = new PaginationList
             {
                 HasNext = places.HasNext,
@@ -29,7 +29,7 @@ namespace Places.API.gRPCServices
                 PageSize = places.PageSize,
                 TotalPages = places.TotalPages,
                 //Places = ByteString.CopyFrom(SerializeListToBytes(places.Items))
-                Places = { places.Items.Select(p => new PlaceGrpc() { PlaceId = p.PlaceId.ToString(), PlaceName = p.PlaceName})! }
+                Places = { places.Items.Select(p => new PlaceGrpc() { PlaceId = p.PlaceId.ToString(), PlaceName = p.PlaceName })! }
             };
 
             return pagination;
@@ -57,35 +57,15 @@ namespace Places.API.gRPCServices
                 PageIndex = places.PageIndex,
                 PageSize = places.PageSize,
                 TotalPages = places.TotalPages,
-                //Places = ByteString.CopyFrom(SerializeListToBytes(places.Items))
-                Places = { places.Items.Select(p => new PlaceGrpcLargeObject() { PlaceId = p.PlaceId.ToString(), PlaceName = p.PlaceName,
-                PlaceName17 = new Core.Protos.Field(){PlaceName4 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", PlaceName5  = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", PlaceName6 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"},
-                PlaceName18 = new Core.Protos.Field(){PlaceName4 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", PlaceName5  = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", PlaceName6 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"},
-                PlaceName19 = new Core.Protos.Field(){PlaceName4 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", PlaceName5  = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", PlaceName6 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"},
-                PlaceName20 = { new Core.Protos.Field(){PlaceName4 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", PlaceName5  = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", PlaceName6 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"}, },
-                PlaceName2 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName3 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName4 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName5 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName6 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName7 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName8 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName9 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName11 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName12 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName13 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName14 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName15 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName16 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName21 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName22 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName23 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName24 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName25 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName26 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName27 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                PlaceName28 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-                })! }
+                Places = ByteString.CopyFrom(SerializeListToBytes(places.Items))
+                //Places = { places.Items.Select(p => new PlaceGrpcLargeObject() { PlaceId = p.PlaceId.ToString(), PlaceName = p.PlaceName,
+                //PlaceName17 = new Core.Protos.Field(){PlaceName4 = "", PlaceName5  = "", PlaceName6 = ""},
+                //PlaceName18 = new Core.Protos.Field(){PlaceName4 = "", PlaceName5  = "", PlaceName6 = ""},
+                //PlaceName19 = new Core.Protos.Field(){PlaceName4 = "", PlaceName5  = "", PlaceName6 = ""},
+                //PlaceName20 = { new Core.Protos.Field(){PlaceName4 = "", PlaceName5  = "", PlaceName6 = ""}, },
+                //PlaceName65 = { new Core.Protos.Enumeration(), },
+                //    })
+                //}
             };
 
             return pagination;
