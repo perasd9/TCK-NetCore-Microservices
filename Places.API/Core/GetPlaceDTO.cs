@@ -93,121 +93,151 @@ namespace Places.API.Core
         [ProtoMember(29)]
         public string PlaceName28 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(30)]
         public string PlaceName29 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(31)]
         public string PlaceName30 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(32)]
         public string PlaceName31 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(33)]
         public string PlaceName32 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(34)]
         public string PlaceName33 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(35)]
         public string PlaceName34 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(36)]
         public string PlaceName35 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(37)]
         public string PlaceName36 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(38)]
         public string PlaceName37 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(39)]
         public string PlaceName38 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(40)]
         public string PlaceName39 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(41)]
         public string PlaceName40 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(42)]
         public string PlaceName41 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(43)]
         public string PlaceName42 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(44)]
         public string PlaceName43 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(45)]
         public string PlaceName44 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(46)]
         public string PlaceName45 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(47)]
         public string PlaceName46 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(48)]
         public string PlaceName47 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(49)]
         public string PlaceName48 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(50)]
         public string PlaceName49 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(51)]
         public string PlaceName50 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(52)]
         public string PlaceName51 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(53)]
         public string PlaceName52 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(54)]
         public string PlaceName53 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(55)]
         public string PlaceName54 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(56)]
         public string PlaceName55 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(57)]
         public string PlaceName56 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(58)]
         public string PlaceName57 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(59)]
         public string PlaceName58 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(60)]
         public string PlaceName59 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(61)]
         public string PlaceName60 { get; set; } = "";
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(62)]
         public Enumeration PlaceName61 { get; set; }
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(63)]
         public Enumeration PlaceName62 { get; set; }
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(64)]
         public Enumeration PlaceName63 { get; set; }
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(65)]
         public Enumeration PlaceName64 { get; set; }
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(66)]
         public Enumeration PlaceName65 { get; set; }
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(67)]
         public Enumeration PlaceName66 { get; set; }
         [NotMapped]
-        [ProtoMember(29)]
+        [ProtoMember(68)]
         public List<Enumeration> PlaceName67 { get; set; }
+    }
+    public enum Enumeration
+    {
+        Primary, Secondary
+    }
+
+    [ProtoContract]
+    public class Field
+    {
+        [ProtoMember(1)]
+        public Guid PlaceId { get; set; }
+        [ProtoMember(2)]
+        public string PlaceName { get; set; } = "";
+        [ProtoMember(3)]
+        [NotMapped]
+        public long PlaceName1 { get; set; }
+        [NotMapped]
+        [ProtoMember(4)]
+        public long PlaceName2 { get; set; }
+        [NotMapped]
+        [ProtoMember(5)]
+        public string PlaceName3 { get; set; } = "";
+        [NotMapped]
+        [ProtoMember(6)]
+        public long PlaceName4 { get; set; }
+
+        public Field()
+        {
+
+        }
     }
 }

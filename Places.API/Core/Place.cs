@@ -209,35 +209,4 @@ namespace Places.API.Core
         [ProtoMember(68)]
         public List<Enumeration> PlaceName67 { get; set; }
     }
-
-    public enum Enumeration
-    {
-        Primary, Secondary
-    }
-
-    [ProtoContract]
-    public class Field
-    {
-        [ProtoMember(1)]
-        public Guid PlaceId { get; set; }
-        [ProtoMember(2)]
-        public string PlaceName { get; set; } = "";
-        [ProtoMember(3)]
-        [NotMapped]
-        public long PlaceName1 { get; set; }
-        [NotMapped]
-        [ProtoMember(4)]
-        public long PlaceName2 { get; set; }
-        [NotMapped]
-        [ProtoMember(5)]
-        public string PlaceName3 { get; set; } = "";
-        [NotMapped]
-        [ProtoMember(6)]
-        public long PlaceName4 { get; set; }
-
-        public Field()
-        {
-            
-        }
-    }
 }

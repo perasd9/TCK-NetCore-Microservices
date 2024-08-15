@@ -1,5 +1,6 @@
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
@@ -22,6 +23,22 @@ namespace TypesOfSportingEvents.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.WebHost.ConfigureKestrel(serverOptions =>
+            {
+                //serverOptions.Limits.MaxConcurrentConnections = 5000;
+                //serverOptions.Limits.MaxConcurrentUpgradedConnections = 5000;
+
+                //ThreadPool.SetMinThreads(200, 200);
+
+                serverOptions.ConfigureEndpointDefaults(lo =>
+                {
+                    lo.Protocols = HttpProtocols.Http1AndHttp2;
+                    lo.UseHttps();
+                });
+
+
+            });
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();

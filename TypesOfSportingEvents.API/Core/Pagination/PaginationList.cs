@@ -10,6 +10,11 @@
         public bool HasPrevious => PageIndex > 1;
         public bool HasNext => PageIndex < TotalPages;
 
+        public PaginationList()
+        {
+            
+        }
+
         public PaginationList(List<TEntity> items, int count, int pageNumber, int pageSize)
         {
             PageSize = pageSize;

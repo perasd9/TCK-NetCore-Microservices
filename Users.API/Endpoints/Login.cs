@@ -28,7 +28,7 @@ namespace Identity.API.Endpoints
 
             var result = await _authenticationService.LoginUser(user);
 
-            return result.IsSuccess ? Ok(_authenticationService.GenerateToken(user)) : ApiResults.Problem(result);
+            return result.IsSuccess ? Ok(_authenticationService.GenerateToken(result.Value)) : ApiResults.Problem(result);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace SportingEvents.API.Application
 
             var items = await _unitOfWork.SportingEventRepository.GetAll(queryParameters).ToListAsync(cancellationToken: cancellationToken);
 
-            HttpResponseMessage response = await http.GetAsync("https://localhost:9201/api/v1/types", cancellationToken);
+            HttpResponseMessage response = await http.GetAsync("https://localhost:9201/api/v1/types-of-sporting-events", cancellationToken);
 
             var types = JsonSerializer.Deserialize<PaginationList<TypeOfSportingEvent>>(await response.Content.ReadAsStringAsync(cancellationToken),
                 new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });

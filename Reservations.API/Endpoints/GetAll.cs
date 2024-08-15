@@ -1,13 +1,11 @@
 ﻿using Ardalis.ApiEndpoints;
-using Grpc.Net.Client;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using Reservations.API.Core;
 using Reservations.API.Endpoints.QueryParameters;
 using Reservations.API.Core.Pagination;
 using Reservations.API.Application;
+using Reservations.API.Core.Abstractions;
 
 namespace Reservations.API.Endpoints
 {
@@ -32,11 +30,11 @@ namespace Reservations.API.Endpoints
             http.DefaultRequestVersion = HttpVersion.Version20;
 
             //HttpResponseMessage response = await http.GetAsync("https://localhost:9401/api/v1/sportingevents", cancellationToken);
-            var reservations = await _reservationService.GetAll(queryParameters);
+            var result = await _reservationService.GetAll(queryParameters);
             //var events = JsonSerializer.Deserialize<List<SportingEvent>>(await response.Content.ReadAsStringAsync(), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true});
 
 
-            return Ok(reservations);
+            return result.IsSuccess ? Ok(result.Value) : ApiResults.Problem(result);
         }
     }
 }

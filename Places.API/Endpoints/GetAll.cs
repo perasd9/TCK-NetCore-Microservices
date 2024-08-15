@@ -12,7 +12,7 @@ namespace Places.API.Endpoints
 {
     public class GetAll : EndpointBaseAsync
         .WithRequest<PlaceQueryParameters>
-        .WithActionResult<PaginationList<GetPlaceDTO>>
+        .WithActionResult<PaginationList<Place>>
     {
         private readonly PlaceService _placeService;
 
@@ -22,7 +22,15 @@ namespace Places.API.Endpoints
         }
 
         [HttpGet("api/v1/places")]
-        public override async Task<ActionResult<PaginationList<GetPlaceDTO>>> HandleAsync([FromQuery]PlaceQueryParameters queryParameters, CancellationToken cancellationToken = default)
+        public override async Task<ActionResult<PaginationList<Place>>> HandleAsync([FromQuery]PlaceQueryParameters queryParameters, CancellationToken cancellationToken = default)
+        {
+            var result = await _placeService.GetAll(queryParameters);
+
+            return result.IsSuccess ? Ok(result.Value) : ApiResults.Problem(result);
+        }
+
+        [HttpGet("api/v1/placesLarge")]
+        public async Task<ActionResult<PaginationList<GetPlaceDTO>>> Handle([FromQuery] PlaceQueryParameters queryParameters, CancellationToken cancellationToken = default)
         {
             var result = await _placeService.GetAll(queryParameters);
 
@@ -38,7 +46,7 @@ namespace Places.API.Endpoints
                     PlaceName25 = new Core.Field(),
                     PlaceName26 = new Core.Field(),
                     PlaceName27 = new List<Core.Field>() { new Core.Field() },
-                    PlaceName67 = new List<Core.Enumeration>(){ new Core.Enumeration() },
+                    PlaceName67 = new List<Core.Enumeration>() { new Core.Enumeration() },
                 })
             };
 

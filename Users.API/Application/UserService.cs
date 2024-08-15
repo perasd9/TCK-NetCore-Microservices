@@ -7,6 +7,7 @@ using Identity.API.Core.Interfaces.UnitOfWork;
 using Identity.API.Core.Pagination;
 using Microsoft.EntityFrameworkCore;
 using Polly;
+using Polly.Fallback;
 using Polly.Wrap;
 using ProtoBuf;
 using System.Net;
@@ -27,7 +28,7 @@ namespace Identity.API.Application
             _unitOfWork = unitOfWork;
             _httpClientFactory = httpClientFactory;
 
-            var retryPolicy = Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
+            var retryPolicy = Policy.HandleResult<HttpResponseMessage>(r => r.StatusCode == HttpStatusCode.InternalServerError || r.StatusCode == HttpStatusCode.BadGateway)
                 .Or<Exception>()
                 .WaitAndRetryAsync(3, attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
                 (outcome, timeSpan, retryCount, context) =>
@@ -42,7 +43,7 @@ namespace Identity.API.Application
                     Console.WriteLine($"Retry attempt {retryCount}");
                 });
 
-            var circuitBreakerPolicy = Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
+            var circuitBreakerPolicy = Policy.HandleResult<HttpResponseMessage>(r => r.StatusCode == HttpStatusCode.InternalServerError || r.StatusCode == HttpStatusCode.BadGateway)
                 .Or<Exception>()
                 .CircuitBreakerAsync(2, TimeSpan.FromMinutes(2),
                 onBreak: (outcome, timespan) =>
@@ -74,8 +75,8 @@ namespace Identity.API.Application
                 });
 
 
-            _policyWrap = Policy.WrapAsync(retryPolicy, circuitBreakerPolicy);
-            _policyWrapGrpc = Policy.WrapAsync(retryPolicyGrpc, circuitBreakerPolicyGrpc);
+            _policyWrap = Policy.WrapAsync(circuitBreakerPolicy, retryPolicy);
+            _policyWrapGrpc = Policy.WrapAsync(circuitBreakerPolicyGrpc, retryPolicyGrpc);
         }
 
         //Rest application logic

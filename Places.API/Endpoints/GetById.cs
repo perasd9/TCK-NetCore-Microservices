@@ -18,7 +18,7 @@ namespace Places.API.Endpoints
             _placeService = placeService;
         }
 
-        [HttpGet("api/v1/types-of-sporting-events/{id}")]
+        [HttpGet("api/v1/places/{id}")]
         //[Authorize]
         public override async Task<ActionResult<Place>> HandleAsync([FromRoute(Name = "id")] Guid request, CancellationToken cancellationToken = default)
         {

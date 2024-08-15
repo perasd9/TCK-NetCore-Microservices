@@ -8,6 +8,7 @@ using Reservations.API.Core.Interfaces.UnitOfWork;
 using Reservations.API.Core.Pagination;
 using Reservations.API.Core.Protos;
 using Reservations.API.Endpoints.QueryParameters;
+using System.Data.Common;
 using System.Net;
 using System.Text;
 using System.Text.Json;
@@ -29,7 +30,7 @@ namespace Reservations.API.Application
             _httpClientFactory = httpClientFactory;
             _configuration = configuration;
 
-            var retryPolicy = Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
+            var retryPolicy = Policy.HandleResult<HttpResponseMessage>(r => r.StatusCode == HttpStatusCode.InternalServerError || r.StatusCode == HttpStatusCode.BadGateway)
                 .Or<Exception>()
                 .WaitAndRetryAsync(3, attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
                 (outcome, timeSpan, retryCount, context) =>
@@ -44,7 +45,7 @@ namespace Reservations.API.Application
                     Console.WriteLine($"Retry attempt {retryCount}");
                 });
 
-            var circuitBreakerPolicy = Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
+            var circuitBreakerPolicy = Policy.HandleResult<HttpResponseMessage>(r => r.StatusCode == HttpStatusCode.InternalServerError || r.StatusCode == HttpStatusCode.BadGateway)
                 .Or<Exception>()
                 .CircuitBreakerAsync(2, TimeSpan.FromMinutes(2),
                 onBreak: (outcome, timespan) =>
@@ -75,7 +76,7 @@ namespace Reservations.API.Application
                     Console.WriteLine("Circuit breaker half-open");
                 });
 
-            var fallbackPolicy = Policy.HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
+            var fallbackPolicy = Policy.HandleResult<HttpResponseMessage>(r => r.StatusCode == HttpStatusCode.InternalServerError || r.StatusCode == HttpStatusCode.BadGateway)
                 .Or<Exception>()
                 .FallbackAsync(
                 fallbackAction: (result, context, cancellationToken) =>
@@ -102,8 +103,8 @@ namespace Reservations.API.Application
 
 
 
-            _policyWrap = Policy.WrapAsync(retryPolicy, circuitBreakerPolicy, fallbackPolicy);
-            _policyWrapGrpc = Policy.WrapAsync(retryPolicyGrpc, circuitBreakerPolicyGrpc, fallbackPolicyGrpc);
+            _policyWrap = Policy.WrapAsync(fallbackPolicy, circuitBreakerPolicy, retryPolicy);
+            _policyWrapGrpc = Policy.WrapAsync(fallbackPolicyGrpc, circuitBreakerPolicyGrpc, retryPolicyGrpc);
         }
 
         //REST METHOD
@@ -131,13 +132,16 @@ namespace Reservations.API.Application
             await _unitOfWork.ReservationRepository.Save(reservation);
 
             var httpResponse = await _policyWrap.ExecuteAsync(() =>
-                http.PutAsync($"{_configuration.GetSection("Routes")["UserRoute"]}/{reservation.UserId}/loyalty-points/increase?Amount={reservation.ReservationComponents?.Count * 10}", new StringContent(
-                    JsonSerializer.Serialize(new object()),
-                    Encoding.UTF8,
-                    "application/json")));
+        http.PutAsync($"{_configuration.GetSection("Routes")["UserRoute"]}/{reservation.UserId}/loyalty-points/increase?Amount={reservation.ReservationComponents?.Count * 10}", new StringContent(
+            JsonSerializer.Serialize(new object()),
+            Encoding.UTF8,
+            "application/json")));
+
 
             if (httpResponse.StatusCode != HttpStatusCode.OK)
-                return Result.Failure(ReservationErrors.IncreaseLoyaltyPoints(httpResponse.ToString()));
+            {
+                return Result.Failure(ReservationErrors.IncreaseLoyaltyPoints("User " + httpResponse.ReasonPhrase!));
+            }
 
             foreach (var item in reservation.ReservationComponents!)
             {
@@ -149,6 +153,8 @@ namespace Reservations.API.Application
 
                 if (httpResponse.StatusCode != HttpStatusCode.OK)
                 {
+                    var sportingEventResponse = httpResponse;
+
                     httpResponse = await _policyWrap.ExecuteAsync(() =>
                         http.PutAsync($"{_configuration.GetSection("Routes")["UserRoute"]}/{reservation.UserId}/loyalty-points/decrease?Amount={reservation.ReservationComponents?.Count * 10}", new StringContent(
                             JsonSerializer.Serialize(new object()),
@@ -163,12 +169,33 @@ namespace Reservations.API.Application
                                 Encoding.UTF8,
                                 "application/json")));
 
-                        if (item1 == item) return Result.Failure(ReservationErrors.IncreaseAvailableTickets(httpResponse.ToString()));
+                        if (item1 == item) return Result.Failure(ReservationErrors.IncreaseAvailableTickets("Sporting Event " + sportingEventResponse.ReasonPhrase!));
                     }
                 }
             }
 
-            await _unitOfWork.SaveChanges();
+            try
+            {
+                await _unitOfWork.SaveChanges();
+            }
+            catch (DbException)
+            {
+                httpResponse = await _policyWrap.ExecuteAsync(() =>
+                        http.PutAsync($"{_configuration.GetSection("Routes")["UserRoute"]}/{reservation.UserId}/loyalty-points/decrease?Amount={reservation.ReservationComponents?.Count * 10}", new StringContent(
+                        JsonSerializer.Serialize(new object()),
+                        Encoding.UTF8,
+                        "application/json")));
+
+                foreach (var item in reservation.ReservationComponents!)
+                {
+                    httpResponse = await _policyWrap.ExecuteAsync(() =>
+                            http.PutAsync($"{_configuration.GetSection("Routes")["SportingEventRoute"]}/{item.SportingEventId}/available-tickets/increase?Amount={item.NumberOfTickets}", new StringContent(
+                            JsonSerializer.Serialize(new object()),
+                            Encoding.UTF8,
+                            "application/json")));
+                }
+                return Result.Failure(Error.Validation("DbError", "Reservation didn't succedeed"));
+            }
 
             transaction.Complete();
 
@@ -209,9 +236,9 @@ namespace Reservations.API.Application
                     Amount = double.Parse((reservation.ReservationComponents!.Count * 10).ToString())
                 }));
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return Result.Failure(ReservationErrors.IncreaseLoyaltyPoints("Increasing points failed"));
+                return Result.Failure(ReservationErrors.IncreaseLoyaltyPoints(ex.Message));
             }
 
 
@@ -227,7 +254,7 @@ namespace Reservations.API.Application
                         Amount = reservation.ReservationComponents!.Count * 10
                     }));
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     var reply = await _policyWrapGrpc.ExecuteAsync(async () =>
                     await clientUser.DecreaseLoyaltyPointsAsync(
@@ -247,12 +274,37 @@ namespace Reservations.API.Application
                             Amount = reservation.ReservationComponents!.Count * 10
                         }));
 
-                        if (item1 == item) return Result.Failure(ReservationErrors.IncreaseAvailableTickets("Increasing tickets failed!"));
+                        if (item1 == item) return Result.Failure(ReservationErrors.IncreaseAvailableTickets(ex.Message));
                     }
                 }
             }
 
-            await _unitOfWork.SaveChanges();
+            try
+            {
+                await _unitOfWork.SaveChanges();
+            }
+            catch (DbException)
+            {
+                var reply = await _policyWrapGrpc.ExecuteAsync(async () =>
+                await clientUser.DecreaseLoyaltyPointsAsync(
+                new DecreaseLoyaltyPointsRequestGRPC()
+                {
+                    UserId = new UUID() { Id = reservation.UserId.ToString() },
+                    Amount = double.Parse((reservation.ReservationComponents!.Count * 10).ToString())
+                }));
+
+                foreach (var item in reservation.ReservationComponents!)
+                {
+                    reply = await _policyWrapGrpc.ExecuteAsync(async () =>
+                    await clientSportingEvent.IncreaseAvailableTicketsAsync(
+                    new IncreaseAvailableTicketsRequestGRPC()
+                    {
+                        SportingEventId = new UUID() { Id = item.SportingEventId.ToString() },
+                        Amount = reservation.ReservationComponents!.Count * 10
+                    }));
+                }
+                return Result.Failure(Error.Validation("DbError", "Reservation didn't succedeed"));
+            }
 
             transaction.Complete();
 
