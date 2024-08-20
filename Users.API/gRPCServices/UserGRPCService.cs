@@ -80,7 +80,7 @@ namespace Identity.API.gRPCServices
         {
             var result = await _userService.IncreaseLoyaltyPoints(new Guid(request.UserId.Id), request.Amount);
 
-            context.Status = result.IsSuccess ? new Status(StatusCode.InvalidArgument, "Bad request!")
+            context.Status = result.IsSuccess != true ? new Status(StatusCode.InvalidArgument, "Bad request!")
                 : new Status(StatusCode.OK, "Loyalty points increased!");
 
             return new();
@@ -90,7 +90,7 @@ namespace Identity.API.gRPCServices
         {
             var result = await _userService.DecreaseLoyaltyPoints(new Guid(request.UserId.Id), request.Amount);
 
-            context.Status = result.IsSuccess ? new Status(StatusCode.InvalidArgument, "Bad request!")
+            context.Status = result.IsSuccess != true ? new Status(StatusCode.InvalidArgument, "Bad request!")
                 : new Status(StatusCode.OK, "Loyalty points decreased!");
 
             return new();

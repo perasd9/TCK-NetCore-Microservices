@@ -1,4 +1,5 @@
-﻿using Grpc.Net.Client;
+﻿using Grpc.Core;
+using Grpc.Net.Client;
 using Microsoft.EntityFrameworkCore;
 using Polly;
 using Polly.Wrap;
@@ -22,7 +23,7 @@ namespace Reservations.API.Application
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
         private readonly AsyncPolicyWrap<HttpResponseMessage> _policyWrap;
-        private readonly AsyncPolicyWrap _policyWrapGrpc;
+        private readonly AsyncPolicyWrap<Empty> _policyWrapGrpc;
 
         public ReservationService(IUnitOfWork unitOfWork, IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
@@ -38,7 +39,7 @@ namespace Reservations.API.Application
                     Console.WriteLine($"Retry attempt {retryCount}");
                 });
 
-            var retryPolicyGrpc = Policy.Handle<Exception>()
+            var retryPolicyGrpc = Policy<Empty>.Handle<Exception>()
                 .WaitAndRetryAsync(3, attempt => TimeSpan.FromSeconds(Math.Pow(2, attempt)),
                 (outcome, timeSpan, retryCount, context) =>
                 {
@@ -61,7 +62,7 @@ namespace Reservations.API.Application
                     Console.WriteLine("Circuit breaker half-open");
                 });
 
-            var circuitBreakerPolicyGrpc = Policy.Handle<Exception>()
+            var circuitBreakerPolicyGrpc = Policy<Empty>.Handle<Exception>()
                 .CircuitBreakerAsync(2, TimeSpan.FromMinutes(2),
                 onBreak: (outcome, timespan) =>
                 {
@@ -93,12 +94,12 @@ namespace Reservations.API.Application
                     return Task.CompletedTask;
                 });
 
-            var fallbackPolicyGrpc = Policy.Handle<Exception>()
+            var fallbackPolicyGrpc = Policy<Empty>.Handle<Exception>()
                 .FallbackAsync((ct) =>
                 {
                     Console.WriteLine("Fallback triggered, manual intervention needed.");
 
-                    return Task.CompletedTask;
+                    return Task.FromResult(new Empty());
                 });
 
 
@@ -129,6 +130,7 @@ namespace Reservations.API.Application
 
             using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
+            reservation.ReservationId = Guid.NewGuid();
             await _unitOfWork.ReservationRepository.Save(reservation);
 
             var httpResponse = await _policyWrap.ExecuteAsync(() =>
@@ -220,21 +222,22 @@ namespace Reservations.API.Application
             });
 
             var clientUser = new gRPCUserService.gRPCUserServiceClient(channelUser);
-            var clientSportingEvent = new gRPCSportingEventService.gRPCSportingEventServiceClient(channelUser);
+            var clientSportingEvent = new gRPCSportingEventService.gRPCSportingEventServiceClient(channelSportingEvent);
 
             using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+
+            reservation.ReservationId = Guid.NewGuid();
 
             await _unitOfWork.ReservationRepository.Save(reservation);
 
             try
             {
-                var reply = await _policyWrapGrpc.ExecuteAsync(async () =>
-                await clientUser.IncreaseLoyaltyPointsAsync(
+                var reply = await clientUser.IncreaseLoyaltyPointsAsync(
                 new IncreaseLoyaltyPointsRequestGRPC()
                 {
                     UserId = new UUID() { Id = reservation.UserId.ToString() },
                     Amount = double.Parse((reservation.ReservationComponents!.Count * 10).ToString())
-                }));
+                });
             }
             catch (Exception ex)
             {

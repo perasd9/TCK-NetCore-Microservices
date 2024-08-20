@@ -7,7 +7,7 @@ export let options = {
 };
 
 export default function () {
-    let res = http.get('https://localhost:9501/api/v1/places');
+    let res = http.get('https://localhost:9501/api/v1/placesLarge');
     check(res, {
         'status is 200': (r) => r.status === 200,
     });

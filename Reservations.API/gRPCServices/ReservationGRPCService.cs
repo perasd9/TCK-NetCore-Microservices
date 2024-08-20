@@ -48,11 +48,27 @@ namespace Reservations.API.gRPCServices
 
         public async override Task<Empty> Add(CreateReservationGrpc request, ServerCallContext context)
         {
-            var reservation = _mapper.Map<Reservation>(request);
+            //immutable protobuf object
+            //var reservation = _mapper.Map<Reservation>(request);
+            var reservation = new Reservation
+            {
+                UserId = new Guid(request.UserId),
+                SumPrice = request.SumPrice,
+                DateOfReservation = request.DateOfReservation.ToDateTime(),
+                ReservationComponents = request.ReservationComponents.Select(rc => new ReservationComponent()
+                {
+                    ReservationId = new Guid(rc.ReservationId),
+                    SerialNumber = rc.SerialNumber,
+                    Price = rc.Price,
+                    NumberOfTickets = rc.NumberOfTickets,
+                    SumComponentPrice = rc.SumComponentPrice,
+                    SportingEventId = new Guid(rc.SportingEventId)
+                }).ToList(),
+            };
 
-            var result = await _reservationService.Add(reservation);
+            var result = await _reservationService.AddGrpc(reservation);
 
-            context.Status = result.IsSuccess ? new Status(StatusCode.InvalidArgument, "Bad request!")
+            context.Status = result.IsSuccess != true ? new Status(StatusCode.InvalidArgument, "Bad request!")
                 : new Status(StatusCode.OK, "Reservation created!");
 
             return new();
