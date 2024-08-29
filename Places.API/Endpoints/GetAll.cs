@@ -40,13 +40,6 @@ namespace Places.API.Endpoints
                 {
                     PlaceId = p.PlaceId,
                     PlaceName = p.PlaceName,
-                    PlaceName22 = new Core.Field(),
-                    PlaceName23 = new Core.Field(),
-                    PlaceName24 = new Core.Field(),
-                    PlaceName25 = new Core.Field(),
-                    PlaceName26 = new Core.Field(),
-                    PlaceName27 = new List<Core.Field>() { new Core.Field() },
-                    PlaceName67 = new List<Core.Enumeration>() { new Core.Enumeration() },
                 })
             };
 

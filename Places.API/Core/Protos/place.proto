@@ -34,88 +34,61 @@ message PlaceGrpc{
 }
 
 message PlaceGrpcLargeObject{
-	string PlaceId = 1;
+    string PlaceId = 1;
 	string PlaceName = 2;
-	string PlaceName2 = 3;
-	string PlaceName3 = 4;
-	string PlaceName4 = 5;
-	string PlaceName5 = 6;
-	string PlaceName6 = 7;
-	string PlaceName7 = 8;
-	string PlaceName8 = 9;
-	string PlaceName9 = 10;
-	string PlaceName11 = 11;
-	string PlaceName12 = 12;
-	string PlaceName13 = 13;
-	string PlaceName14 = 14;
-	string PlaceName15 = 15;
-	string PlaceName16 = 16;
-	Field PlaceName17 = 17;
-	Field PlaceName18 = 18;
-	Field PlaceName19 = 19;
-	repeated Field PlaceName20 = 20;
-	string PlaceName21 = 21;
-	string PlaceName22 = 22;
-	string PlaceName23 = 23;
-	string PlaceName24 = 24;
-	string PlaceName25 = 25;
-	string PlaceName26 = 26;
-	string PlaceName27 = 27;
-	string PlaceName28 = 28;
-	string PlaceName29 = 29;
-	string PlaceName30 = 30;
-	string PlaceName31 = 31;
-	string PlaceName32 = 32;
-	string PlaceName33 = 33;
-	string PlaceName34 = 34;
-	string PlaceName35 = 35;
-	string PlaceName36 = 36;
-	string PlaceName37 = 37;
-	string PlaceName38 = 38;
-	string PlaceName39 = 39;
-	string PlaceName40 = 40;
-	string PlaceName41 = 41;
-	string PlaceName42 = 42;
-	string PlaceName43 = 43;
-	string PlaceName44 = 44;
-	string PlaceName45 = 45;
-	string PlaceName46 = 46;
-	string PlaceName47 = 47;
-	string PlaceName48 = 48;
-	string PlaceName49 = 49;
-	string PlaceName50 = 50;
-	string PlaceName51 = 51;
-	string PlaceName52 = 52;
-	string PlaceName53 = 53;
-	string PlaceName54 = 54;
-	string PlaceName55 = 55;
-	string PlaceName56 = 56;
-	string PlaceName57 = 57;
-	string PlaceName58 = 58;
-	string PlaceName59 = 59;
-	string PlaceName60 = 60;
-	Enumeration PlaceName61 = 61;
-	Enumeration PlaceName62 = 62;
-	Enumeration PlaceName63 = 63;
-	Enumeration PlaceName64 = 64;
-	repeated Enumeration PlaceName65 = 65;
+	string Country = 2;
+	State State = 2;
+	State Mayor = 2;
+	int32 Population = 2;
+	double Area = 2;
+	int32 Elevation = 2;
+	double Latitude = 2;
+	double Longitude = 2;
+	string TimeZone = 2;
+	string OfficialLanguage = 2;
+	repeated string SpokenLanguages = 2;
+	string Currency = 2;
+	string PostalCode = 2;
+	int32 NumberOfDistricts = 2;
+	int32 YearEstablished = 2;
+	repeated string HistoricalEvents = 2;
+	string FamousLandmarks = 2;
+	string MainEconomicActivities = 2;
+	double GDP = 2;
+	ClimateType ClimateType = 2;
+	double AverageAnnualRainfall = 2;
+	double AverageTemperature = 2;
+	bool IsCoastal = 2;
+	int32 NumberOfUniversities = 2;
+	int32 NumberOfHospitals = 2;
+	int32 PublicTransportRoutes = 2;
+	string MajorIndustries = 2;
+	string PopularFestivals = 2;
+	int32 NumberOfParks = 2;
+	bool HasAirport = 2;
+	bool HasSeaport = 2;
+	string MajorSportTeams = 2;
+	int32 AnnualTourists = 2;
+	repeated string SisterCities = 2;
+	string TransportationHub = 2;
+	bool IsUNESCOHeritage = 2;
+	double UnemploymentRate = 2;
+	string LocalCuisine = 2;
 }
 
-enum Enumeration {
+
+enum State {
   Primary = 0;
   Secondary = 1;
 
 }
 
-message Field{
-	int64 PlaceId = 1;
-	int64 PlaceName = 2;
-	int64 PlaceName2 = 3;
-	int64 PlaceName3 = 4;
-	string PlaceName4 = 5;
-	string PlaceName5 = 6;
-	string PlaceName6 = 7;
+enum ClimateType {
+  Primary = 0;
+  Secondary = 1;
+
 }
+
 
 //basic example in case of returning pure list
 message PlaceList{

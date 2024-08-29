@@ -14,7 +14,6 @@ export default function () {
     },
   };
 
-
   let res = http.post('https://localhost:9401/api/v1/reservations',  JSON.stringify({
     "reservationId": "091b4906-a202-44e3-9a70-a2c0d49e2854",
   "sumPrice": 1000,
@@ -32,12 +31,7 @@ export default function () {
   ]
 }), params);
 
-
-
-
-
   check(res, {
     'status is 200': (r) => r.status === 200,
   });
-  //sleep(0.0001);
 }
