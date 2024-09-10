@@ -1,4 +1,4 @@
-##Overview
+## Overview
 
 TCK-NetCore-Microservices is a sample project demonstrating a microservices architecture built with .NET Core.
 This repository showcases different microservices handling various business domains such as users, sporting events, places, and reservations.
@@ -18,7 +18,7 @@ $ dotnet ef 'database' update
 $ dotnet run --project <Microservice>.API
 ```
 
-##Features
+## Features
 
     -Microservices Architecture: Each business domain is represented as an independent microservice.
     -gRPC and REST APIs: Exposes both gRPC and REST endpoints for interaction.
@@ -29,7 +29,7 @@ $ dotnet run --project <Microservice>.API
     -Clean Architecture: Maintains separation of concerns, promoting clean code and maintainability.
     -Modified Saga Pattern: Implements distributed transaction management.
 
-##Microservices
+## Microservices
 
 I used [yarp reverse proxy](https://microsoft.github.io/reverse-proxy/articles/index.html) to route synchronous requests to the corresponding microservice.
 Each microservice has its dependencies such as databases, files etc. Each microservice is decoupled from other microservices and developed and deployed separately.
@@ -41,7 +41,9 @@ Microservices talk to each other with Rest or gRPC for synchronous calls.
     -Reservations.API: Processes reservations and integrates with external services for loyalty points and ticket management.
     -TypesOfSportingEvents.API: Manages types of sporting events.
 
-##Prerequisites
+![konceptualni-model](https://github.com/user-attachments/assets/0b0388ed-80a1-429e-9ded-daa8eed1c12c)
+
+## Prerequisites
 
     -.NET 7 SDK
     -Postman or any gRPC client
