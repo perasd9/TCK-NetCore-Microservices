@@ -20,14 +20,14 @@ $ dotnet run --project <Microservice>.API
 
 ## Features
 
-    -Microservices Architecture: Each business domain is represented as an independent microservice.
-    -gRPC and REST APIs: Exposes both gRPC and REST endpoints for interaction.
-    -Polly for Resilience: Implements retry, circuit breaker, and fallback policies.
-    -Caching: Utilizes server-side and memory caching for optimized data retrieval.
-    -Authentication and Authorization: Implements JWT-based authentication for secure access.
-    -Performance Testing: K6 is used to measure performance across services. Performance testing was best established with complex objects i.e Place objects.
-    -Clean Architecture: Maintains separation of concerns, promoting clean code and maintainability.
-    -Modified Saga Pattern: Implements distributed transaction management.
+    - Microservices Architecture: Each business domain is represented as an independent microservice.
+    - gRPC and REST APIs: Exposes both gRPC and REST endpoints for interaction.
+    - Polly for Resilience: Implements retry, circuit breaker, and fallback policies.
+    - Caching: Utilizes server-side and memory caching for optimized data retrieval.
+    - Authentication and Authorization: Implements JWT-based authentication for secure access.
+    - Performance Testing: K6 is used to measure performance across services. Performance testing was best established with complex objects i.e Place objects.
+    - Clean Architecture: Maintains separation of concerns, promoting clean code and maintainability.
+    - Modified Saga Pattern: Implements distributed transaction management.
 
 ## Microservices
 
@@ -35,17 +35,17 @@ I used [yarp reverse proxy](https://microsoft.github.io/reverse-proxy/articles/i
 Each microservice has its dependencies such as databases, files etc. Each microservice is decoupled from other microservices and developed and deployed separately.
 Microservices talk to each other with Rest or gRPC for synchronous calls.
 
-    -Users.API: Manages user-related operations, including authentication and authorization.
-    -Places.API: Manages place-related data.
-    -SportingEvents.API: Handles sporting events data.
-    -Reservations.API: Processes reservations and integrates with external services for loyalty points and ticket management.
-    -TypesOfSportingEvents.API: Manages types of sporting events.
+    - Users.API: Manages user-related operations, including authentication and authorization.
+    - Places.API: Manages place-related data.
+    - SportingEvents.API: Handles sporting events data.
+    - Reservations.API: Processes reservations and integrates with external services for loyalty points and ticket management.
+    - TypesOfSportingEvents.API: Manages types of sporting events.
 
 ![konceptualni-model](https://github.com/user-attachments/assets/0b0388ed-80a1-429e-9ded-daa8eed1c12c)
 
 ## Prerequisites
 
-    -.NET 7 SDK
-    -Postman or any gRPC client
-    -K6 for performance testing
-    -SQL Server database provider
+    - .NET 7 SDK
+    - Postman or any gRPC client
+    - K6 for performance testing
+    - SQL Server database provider
